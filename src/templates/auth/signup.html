@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer un compte</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f0f2f5;
+            padding: 40px;
+        }
+        .container {
+            background-color: white;
+            width: 400px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Créer un compte</h2>
+    <form action="{{ url_for('signup') }}" method="POST">
+        <div class="form-group">
+            <label>Prénom</label>
+            <input type="text" name="first_name" required value="{{ request.form.first_name or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label>Nom de famille</label>
+            <input type="text" name="family_name" required value="{{ request.form.family_name or '' }}">
+        </div>
+
+        <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" name="password" required>
+            {% if errors.password %}
+                <div class="error">{{ errors.password }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Confirmer le mot de passe</label>
+            <input type="password" name="confirm_password" required>
+            {% if errors.confirm_password %}
+                <div class="error">{{ errors.confirm_password }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Code admin (optionnel)</label>
+            <input type="text" name="admin_code" value="{{ request.form.admin_code or '' }}">
+            {% if errors.admin_code %}
+             <div class="error">{{ errors.admin_code }}</div>
+            {% endif %}
+        </div>
+
+        <input type="submit" value="Créer le compte">
+    </form>
+</div>
+</body>
+</html>
