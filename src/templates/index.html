@@ -37,11 +37,11 @@
 
       <!-- Navigation menu -->
       <div class="postit-container">
-        <a href="../templates/auth/signin.html" class="postit">
+        <a href="{{ url_for('signin') }}" class="postit">
             <i class="bi bi-clipboard-fill"></i>
             <br /><br /><p>Connexion</p>
         </a>
-        <a href="../templates/auth/signup.html" class="postit">
+        <a href="{{ url_for('signup') }}" class="postit">
             <i class="bi bi-clipboard-fill"></i>
             <br /><br /><p>Inscription</p>
         </a>

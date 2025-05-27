@@ -117,7 +117,8 @@ def signup():
 # Redirection vers la page de connexion par défaut
 @app.route('/')
 def index():
-    return redirect(url_for('signin'))
+    return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
