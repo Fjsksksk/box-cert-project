@@ -1,0 +1,152 @@
+{# ─────────────────────────────────────────────────────────────
+  Teacher dashboard (groups & clustering control)
+  -------------------------------------------------
+  VARIABLES JINJA ATTENDUES :
+    students          → liste de dicts  [{id, firstname, lastname, active}]
+    settings          → {'max_choices': 5, 'group_size': 4, 'choices_open': True}
+    satisfaction_pct  → float (ex: 78.4)  # calculé dans algo.py
+    groups            → liste de groupes  [[student_id, …], …]  (optionnel)
+
+  ROUTES À CRÉER (méthode POST/PUT/GET selon besoin) :
+    /teacher/update-settings        (max choices & group size)
+    /teacher/toggle-choices         (open / close student choices)
+    /teacher/reset-groups
+    /teacher/run-clustering
+    /teacher/publish-groups
+    /teacher/toggle-student/<id>    (activer/désactiver étudiant)
+---------------------------------------------------------------- #}
+
+{% extends "base.html" %}
+{% block title %}Teacher dashboard{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Teacher dashboard</h1>
+
+{# ─── Settings section ─────────────────────────────────────── #}
+<section class="mb-10">
+  <h2 class="text-xl font-semibold mb-4">Parameters</h2>
+
+  <form method="post" action="{{ url_for('teacher.update_settings') }}"
+        class="flex flex-wrap items-end gap-6">
+    <div>
+      <label class="block font-medium mb-1" for="max_choices">Max wishes / student</label>
+      <input type="number" min="1" max="10" name="max_choices" id="max_choices"
+             value="{{ settings.max_choices }}"
+             class="w-28 border rounded px-2 py-1">
+    </div>
+    <div>
+      <label class="block font-medium mb-1" for="group_size">Students per group</label>
+      <input type="number" min="2" max="10" name="group_size" id="group_size"
+             value="{{ settings.group_size }}"
+             class="w-28 border rounded px-2 py-1">
+    </div>
+
+    <button type="submit"
+            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      Save settings
+    </button>
+  </form>
+
+  <form method="post" action="{{ url_for('teacher.toggle_choices') }}"
+        class="inline-block mt-4">
+    {% if settings.choices_open %}
+      <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+        Close student choices
+      </button>
+    {% else %}
+      <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+        Open student choices
+      </button>
+    {% endif %}
+  </form>
+</section>
+
+{# ─── Student list ─────────────────────────────────────────── #}
+<section class="mb-10">
+  <h2 class="text-xl font-semibold mb-4">Students ({{ students|length }})</h2>
+
+  <table class="w-full border rounded">
+    <thead>
+      <tr class="bg-gray-100 text-left">
+        <th class="px-3 py-2">#</th>
+        <th class="px-3 py-2">First name</th>
+        <th class="px-3 py-2">Last name</th>
+        <th class="px-3 py-2">Active</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr class="border-t">
+        <td class="px-3 py-1">{{ loop.index }}</td>
+        <td class="px-3 py-1">{{ s.firstname }}</td>
+        <td class="px-3 py-1">{{ s.lastname }}</td>
+        <td class="px-3 py-1">
+          <form method="post"
+                action="{{ url_for('teacher.toggle_student', id=s.id) }}">
+            {% if s.active %}
+              <button class="text-green-600 hover:underline">✓ active</button>
+            {% else %}
+              <button class="text-gray-400 hover:text-green-600">activate</button>
+            {% endif %}
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{# ─── Satisfaction & actions ───────────────────────────────── #}
+<section class="mb-10">
+  <h2 class="text-xl font-semibold mb-4">Global satisfaction</h2>
+  <div class="text-3xl font-bold mb-4">
+    {{ satisfaction_pct | default(0) }}%
+  </div>
+
+  <div class="flex flex-wrap gap-4">
+    <form method="post" action="{{ url_for('teacher.reset_groups') }}">
+      <button class="px-4 py-2 bg-gray-500 text-white rounded
+                     hover:bg-gray-600">
+        Reset groups
+      </button>
+    </form>
+
+    <form method="post" action="{{ url_for('teacher.run_clustering') }}">
+      <button class="px-4 py-2 bg-blue-600 text-white rounded
+                     hover:bg-blue-700">
+        Create groups
+      </button>
+    </form>
+
+    <form method="post" action="{{ url_for('teacher.publish_groups') }}">
+      <button class="px-4 py-2 bg-green-600 text-white rounded
+                     hover:bg-green-700">
+        Publish groups to students
+      </button>
+    </form>
+  </div>
+</section>
+
+{# ─── Groups preview (optional) ────────────────────────────── #}
+{% if groups %}
+<section>
+  <h2 class="text-xl font-semibold mb-4">Generated groups</h2>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    {% for g in groups %}
+      <div class="border rounded p-4">
+        <h3 class="font-semibold mb-2">Group {{ loop.index }}</h3>
+        <ul class="list-disc list-inside">
+          {% for sid in g %}
+            {# On cherche le prénom/nom dans la liste students #}
+            {% set st = students|selectattr("id", "equalto", sid)|first %}
+            <li>{{ st.firstname }} {{ st.lastname }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
