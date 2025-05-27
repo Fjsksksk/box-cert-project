@@ -1,0 +1,4 @@
+Flask>=3.0,<4
+Flask-WTF>=1
+WTForms>=3
+Flask-Login>=0.6
