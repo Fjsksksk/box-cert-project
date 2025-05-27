@@ -1,9 +1,15 @@
 import mysql.connector
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import os, re
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
+import json
+import os
+import sys
 
+# ajouter le dossier src au sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from algo import load_students_from_file, group_students, save_groups
 
 app = Flask(__name__,
     template_folder=os.path.join(os.path.dirname(__file__), '..', 'templates'),
@@ -44,13 +50,13 @@ def signin():
             user = cursor.fetchone()
             cursor.close()
             conn.close()
-       
+        
             if user and check_password_hash(user['password_user'], password):
                 role = user['role']
                 if role == 'student':
-                    return render_template('student.html', user=user)
+                    return redirect(url_for('student'))
                 elif role == 'teacher':
-                    return render_template('teacher.html', user=user)
+                    return redirect(url_for('teacher'))
                 else:
                     errors['general'] = "Unknown role."
             else:
@@ -121,5 +127,65 @@ def index():
     return render_template('index.html')
 
 
+app.secret_key = "secret"  # Requis pour flash()
+
+DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data'))
+PREFERENCES_FILE = os.path.join(DATA_DIR, "preferences.json")
+GROUP_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/group.json"))
+CHOICES_FILE=os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/choice.json"))
+def load_preferences():
+    if os.path.exists(PREFERENCES_FILE):
+        with open(PREFERENCES_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"num_preferences": 3}
+
+def save_preferences(num):
+    os.makedirs(os.path.dirname(PREFERENCES_FILE), exist_ok=True)
+    with open(PREFERENCES_FILE, "w", encoding="utf-8") as f:
+        json.dump({"num_preferences": num}, f, ensure_ascii=False, indent=2)
+
+@app.route('/teacher', methods=["GET", "POST"])
+def teacher():
+    num_preferences = load_preferences()["num_preferences"]
+    groups = []
+    show_confirm_buttons = False
+
+    if request.method == "POST":
+        if 'num_preferences' in request.form:
+            num_preferences = int(request.form["num_preferences"])
+            save_preferences(num_preferences)
+            flash("Nombre d'affinités enregistré.", "success")
+            return redirect(url_for("teacher"))
+
+        elif 'generate_groups' in request.form or 'confirm_generation' in request.form:
+            try:
+                group_size = int(request.form["group_size"])
+                students = load_students_from_file(CHOICES_FILE)
+                total_students = len(students)
+
+                # Si incompatibilité détectée et pas de confirmation
+                if total_students % group_size != 0 and 'confirm_generation' not in request.form:
+                    flash(f"Incompatibilité : {total_students} étudiants ne peuvent pas être divisés en groupes de {group_size}.", "warning")
+                    flash("Souhaitez-vous générer quand même ?", "info")
+                    show_confirm_buttons = True  # pour afficher les boutons
+                else:
+                    groups = group_students(students, group_size, num_preferences)
+                    if groups:
+                        save_groups(groups)
+                        flash("Groupes générés avec succès.", "success")
+                    else:
+                        flash("Impossible de générer les groupes. Essayez un autre nombre.", "danger")
+            except Exception as e:
+                flash(f"Erreur : {str(e)}", "danger")
+
+    # Charger groupes existants si présents
+    if os.path.exists(GROUP_FILE):
+        try:
+            with open(GROUP_FILE, "r", encoding="utf-8") as f:
+                groups = json.load(f)
+        except:
+            groups = []
+
+    return render_template("teacher.html", num_preferences=num_preferences, groups=groups, show_confirm_buttons=show_confirm_buttons)
 if __name__ == '__main__':
     app.run(debug=True)
