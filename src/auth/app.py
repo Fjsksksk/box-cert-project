@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash
 import json
 import os
 import sys
+from flask import session
 
 # ajouter le dossier src au sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -52,6 +53,11 @@ def signin():
             conn.close()
         
             if user and check_password_hash(user['password_user'], password):
+                session['user'] = {
+                        "firstname": user["firstname"],
+                        "lastname": user["lastname"],
+                        "role": user["role"]
+                }
                 role = user['role']
                 if role == 'student':
                     return redirect(url_for('student'))
@@ -144,6 +150,27 @@ def save_preferences(num):
     with open(PREFERENCES_FILE, "w", encoding="utf-8") as f:
         json.dump({"num_preferences": num}, f, ensure_ascii=False, indent=2)
 
+
+def delete_student_from_choices(file_path, student_name):
+    if not os.path.exists(file_path):
+        return False
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Supprimer la personne concernée
+    data = [entry for entry in data if entry["name"] != student_name]
+
+    # Supprimer la personne des préférences des autres
+    for entry in data:
+        entry["preferences"] = [pref for pref in entry["preferences"] if pref != student_name]
+
+    # Sauvegarde
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    return True
+
 @app.route('/teacher', methods=["GET", "POST"])
 def teacher():
     num_preferences = load_preferences()["num_preferences"]
@@ -177,6 +204,15 @@ def teacher():
                         flash("Impossible de générer les groupes. Essayez un autre nombre.", "danger")
             except Exception as e:
                 flash(f"Erreur : {str(e)}", "danger")
+        elif 'delete_student' in request.form:
+            student_to_delete = request.form.get("student_to_delete")
+            if student_to_delete:
+                success = delete_student_from_choices(CHOICES_FILE, student_to_delete)
+                if success:
+                    flash(f"{student_to_delete} a été supprimé avec succès.", "success")
+                else:
+                    flash("Erreur lors de la suppression.", "danger")
+            return redirect(url_for("teacher"))
 
     # Charger groupes existants si présents
     if os.path.exists(GROUP_FILE):
@@ -186,6 +222,59 @@ def teacher():
         except:
             groups = []
 
-    return render_template("teacher.html", num_preferences=num_preferences, groups=groups, show_confirm_buttons=show_confirm_buttons)
+    all_students = []
+    if os.path.exists(CHOICES_FILE):
+        with open(CHOICES_FILE, "r", encoding="utf-8") as f:
+            try:
+                all_students = [entry["name"] for entry in json.load(f)]
+            except:
+                pass
+
+    return render_template("teacher.html", num_preferences=num_preferences, groups=groups, show_confirm_buttons=show_confirm_buttons, all_students=all_students)
+
+
+@app.route('/student', methods=['GET', 'POST'])
+def student():
+    preferences = load_preferences()
+    num_preferences = preferences["num_preferences"]
+
+    if request.method == "POST":
+        student_name = request.form.get("student_name").strip()
+        selected_choices = request.form.getlist("choices")
+
+        if len(selected_choices) > num_preferences:
+            flash(f"Vous ne pouvez sélectionner que {num_preferences} affinité(s).", "danger")
+        else:
+            # Change choices to a set to avoid duplicates
+            if os.path.exists(CHOICES_FILE):
+                with open(CHOICES_FILE, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            else:
+                data = {}
+
+            data[student_name] = selected_choices
+
+            os.makedirs(os.path.dirname(CHOICES_FILE), exist_ok=True)
+            with open(CHOICES_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+
+            flash("Vos choix ont bien été enregistrés.", "success")
+            return redirect(url_for("student"))
+
+    # Change the list of students to be fetched from the database
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT CONCAT(lastname, '.', firstname) AS full_name FROM users WHERE role = 'student'")
+        students = [row[0] for row in cursor.fetchall()]
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        flash(f"Erreur de chargement des étudiants : {str(e)}", "danger")
+        students = []
+
+    return render_template("student.html", num_preferences=num_preferences, other_students=students, user=session.get("user"))
+
+
 if __name__ == '__main__':
     app.run(debug=True)

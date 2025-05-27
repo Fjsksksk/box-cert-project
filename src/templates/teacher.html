@@ -21,7 +21,18 @@
     <input type="number" min="1" max="10" class="form-control w-25" name="num_preferences" value="{{ num_preferences }}">
     <button type="submit" class="btn btn-primary mt-3">Enregistrer</button>
   </form>
-
+  <hr>
+  <h2>Supprimer un élève</h2>
+  <form method="post">
+    <label for="student_to_delete" class="form-label">Sélectionnez l'élève à supprimer :</label>
+    <select name="student_to_delete" class="form-select w-50" required>
+      {% for student in all_students %}
+        <option value="{{ student }}">{{ student }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" name="delete_student" value="1" class="btn btn-danger mt-3">Supprimer</button>
+  </form>
+  
 
 
   <hr>

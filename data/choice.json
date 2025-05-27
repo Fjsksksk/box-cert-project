@@ -1,102 +1,180 @@
 [
   {
-    "name": "Dupont Jean",
-    "preferences": ["Martin Alice","Bernard Paul","Durand Sophie"]
-  },
-  {
     "name": "Martin Alice",
-    "preferences": ["Dupont Jean","Durand Sophie","Bernard Paul"]
+    "preferences": [
+      "Durand Sophie",
+      "Bernard Paul"
+    ]
   },
   {
     "name": "Bernard Paul",
-    "preferences": ["Durand Sophie","Martin Alice","Dupont Jean"]
+    "preferences": [
+      "Durand Sophie",
+      "Martin Alice"
+    ]
   },
   {
     "name": "Durand Sophie",
-    "preferences": ["Martin Alice","Bernard Paul","Dupont Jean"]
+    "preferences": [
+      "Martin Alice",
+      "Bernard Paul"
+    ]
   },
   {
     "name": "Lemoine Luc",
-    "preferences": ["Garcia Emma","Moreau Clara","Petit Lucas"]
+    "preferences": [
+      "Garcia Emma",
+      "Moreau Clara"
+    ]
   },
   {
     "name": "Garcia Emma",
-    "preferences": ["Lemoine Luc","Petit Lucas","Moreau Clara"]
+    "preferences": [
+      "Lemoine Luc",
+      "Moreau Clara"
+    ]
   },
   {
     "name": "Moreau Clara",
-    "preferences": ["Petit Lucas","Lemoine Luc","Garcia Emma"]
-  },
-  {
-    "name": "Petit Lucas",
-    "preferences": ["Moreau Clara","Garcia Emma","Lemoine Luc"]
+    "preferences": [
+      "Lemoine Luc",
+      "Garcia Emma"
+    ]
   },
   {
     "name": "Rousseau Léa",
-    "preferences": ["Dubois Hugo","Fournier Camille","Marchand Maxime"]
+    "preferences": [
+      "Dubois Hugo",
+      "Fournier Camille",
+      "Marchand Maxime"
+    ]
   },
   {
     "name": "Dubois Hugo",
-    "preferences": ["Fournier Camille","Marchand Maxime","Rousseau Léa"]
+    "preferences": [
+      "Fournier Camille",
+      "Marchand Maxime",
+      "Rousseau Léa"
+    ]
   },
   {
     "name": "Fournier Camille",
-    "preferences": ["Marchand Maxime","Rousseau Léa","Dubois Hugo"]
+    "preferences": [
+      "Marchand Maxime",
+      "Rousseau Léa",
+      "Dubois Hugo"
+    ]
   },
   {
     "name": "Marchand Maxime",
-    "preferences": ["Rousseau Léa","Dubois Hugo","Fournier Camille"]
+    "preferences": [
+      "Rousseau Léa",
+      "Dubois Hugo",
+      "Fournier Camille"
+    ]
   },
   {
     "name": "Blanc Chloé",
-    "preferences": ["Lefèvre Thomas","Morel Sarah","Garnier Antoine"]
+    "preferences": [
+      "Lefèvre Thomas",
+      "Morel Sarah",
+      "Garnier Antoine"
+    ]
   },
   {
     "name": "Lefèvre Thomas",
-    "preferences": ["Morel Sarah","Garnier Antoine","Blanc Chloé"]
+    "preferences": [
+      "Morel Sarah",
+      "Garnier Antoine",
+      "Blanc Chloé"
+    ]
   },
   {
     "name": "Morel Sarah",
-    "preferences": ["Garnier Antoine","Blanc Chloé","Lefèvre Thomas"]
+    "preferences": [
+      "Garnier Antoine",
+      "Blanc Chloé",
+      "Lefèvre Thomas"
+    ]
   },
   {
     "name": "Garnier Antoine",
-    "preferences": ["Blanc Chloé","Lefèvre Thomas","Morel Sarah"]
+    "preferences": [
+      "Blanc Chloé",
+      "Lefèvre Thomas",
+      "Morel Sarah"
+    ]
   },
   {
     "name": "Michel Julie",
-    "preferences": ["David Nicolas","Laurent Elise","Bertrand Yann"]
+    "preferences": [
+      "David Nicolas",
+      "Laurent Elise",
+      "Bertrand Yann"
+    ]
   },
   {
     "name": "David Nicolas",
-    "preferences": ["Laurent Elise","Bertrand Yann","Michel Julie"]
+    "preferences": [
+      "Laurent Elise",
+      "Bertrand Yann",
+      "Michel Julie"
+    ]
   },
   {
     "name": "Laurent Elise",
-    "preferences": ["Bertrand Yann","Michel Julie","David Nicolas"]
+    "preferences": [
+      "Bertrand Yann",
+      "Michel Julie",
+      "David Nicolas"
+    ]
   },
   {
     "name": "Bertrand Yann",
-    "preferences": ["Michel Julie","David Nicolas","Laurent Elise"]
+    "preferences": [
+      "Michel Julie",
+      "David Nicolas",
+      "Laurent Elise"
+    ]
   },
   {
     "name": "Simon Claire",
-    "preferences": ["Girard Paul","Henry Marie","Noël Lucas"]
+    "preferences": [
+      "Girard Paul",
+      "Henry Marie",
+      "Noël Lucas"
+    ]
   },
   {
     "name": "Girard Paul",
-    "preferences": ["Henry Marie","Noël Lucas","Simon Claire"]
+    "preferences": [
+      "Henry Marie",
+      "Noël Lucas",
+      "Simon Claire"
+    ]
   },
   {
     "name": "Henry Marie",
-    "preferences": ["Noël Lucas","Simon Claire","Girard Paul"]
+    "preferences": [
+      "Noël Lucas",
+      "Simon Claire",
+      "Girard Paul"
+    ]
   },
   {
     "name": "Noël Lucas",
-    "preferences": ["Simon Claire","Girard Paul","Henry Marie"]
+    "preferences": [
+      "Simon Claire",
+      "Girard Paul",
+      "Henry Marie"
+    ]
   },
   {
     "name": "Fernandez Ana",
-    "preferences": ["Morel Sarah","Lemoine Luc","Martin Alice"]
+    "preferences": [
+      "Morel Sarah",
+      "Lemoine Luc",
+      "Martin Alice"
+    ]
   }
 ]
