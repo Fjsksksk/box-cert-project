@@ -1,6 +1,8 @@
 import json
 import math
 from ortools.sat.python import cp_model
+import os
+
 
 
 def load_students_from_file(file_path):
@@ -74,17 +76,17 @@ def group_students(students, group_size, num_preferences):
             for g in range(num_groups):
                 if solver.Value(x[i, g]) == 1:
                     if i in assigned:
-                        print(f"Erreur : élève {names[i]} déjà assigné à un groupe.")
+                        print(f"Error: student {names[i]} is already assigned to a group.")
                     groups[g].append(names[i])
                     assigned.add(i)
 
-        print(f"Solution trouvée avec score total = {solver.ObjectiveValue()}")
+        print(f"Solution found with total score = {solver.ObjectiveValue()}")
 
         for gi, grp in enumerate(groups):
-            print(f"Groupe {gi+1} ({len(grp)} élèves) : {grp}")
+            print(f"Group {gi+1} ({len(grp)} students) : {grp}")
         return groups
     else:
-        print("Aucune solution trouvée avec cette taille de groupe.")
+        print("No solution found with this group size.")
         return None
     
 
@@ -104,11 +106,11 @@ if __name__ == "__main__":
     file_path = os.path.abspath(os.path.join(base_dir, "../data/choice.json"))
 
     if not os.path.isfile(file_path):
-        print(f"Erreur : fichier introuvable : {file_path}")
+        print(f"Error: file not found: {file_path}")
         exit(1)
 
     students = load_students_from_file(file_path)
-    print(f"{len(students)} élèves chargés.")
+    print(f"{len(students)} students loaded.")
 
     group_size = 4
     num_preferences = 3

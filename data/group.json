@@ -1,9 +1,9 @@
 [
   [
-    "Dupont Jean",
-    "Martin Alice",
-    "Bernard Paul",
-    "Durand Sophie"
+    "Simon Claire",
+    "Girard Paul",
+    "Henry Marie",
+    "Noël Lucas"
   ],
   [
     "Michel Julie",
@@ -18,15 +18,10 @@
     "Marchand Maxime"
   ],
   [
-    "Simon Claire",
-    "Girard Paul",
-    "Henry Marie",
-    "Noël Lucas"
-  ],
-  [
-    "Blanc Chloé",
-    "Lefèvre Thomas",
-    "Garnier Antoine"
+    "Dupont Jean",
+    "Martin Alice",
+    "Bernard Paul",
+    "Durand Sophie"
   ],
   [
     "Lemoine Luc",
@@ -37,5 +32,10 @@
     "Garcia Emma",
     "Moreau Clara",
     "Petit Lucas"
+  ],
+  [
+    "Blanc Chloé",
+    "Lefèvre Thomas",
+    "Garnier Antoine"
   ]
 ]
