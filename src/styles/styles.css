@@ -1,8 +1,10 @@
+/***************************Menu****************************************/
+
 html, body {
   font-family: Tahoma, sans-serif; 
   height: 100%;
   margin: 0;
-  background-image: url('../images/fond_menu.png');
+  background-image: url('../styles/images/background.png');
   background-size: auto;
   background-repeat: repeat;
   background-position: center;
@@ -35,7 +37,7 @@ footer {
 
 .arc-text text {
   font-size: 70px;
-  fill: #2b3a60;
+  fill: #faff60;
   text-transform: uppercase;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); 
   letter-spacing: 5px;
@@ -65,7 +67,7 @@ footer {
 /* Style pour le titre secondaire */
 .subtitle {
   font-size: 36px;
-  color: #2b3a60;
+  color: #faff60;
   text-align: center;
   margin-top: 20px;
 }
@@ -124,11 +126,7 @@ footer {
 }
 
 .postit:nth-child(2) i {
-  color: #dbe2e9; 
-}
-
-.postit:nth-child(3) i {
-  color: #a2b5c0; 
+  color: #ed5c5c; 
 }
 
 /* Responsive */
