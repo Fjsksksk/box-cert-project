@@ -3,6 +3,7 @@ import math
 from ortools.sat.python import cp_model
 
 def load_students_from_file(file_path):
+    # Load student records from a JSON file at the specified path.
     with open(file_path, "r", encoding="utf-8") as f:
         students = json.load(f)
     return students
@@ -11,10 +12,10 @@ def group_students(students, group_size, num_preferences):
     model = cp_model.CpModel()
 
     n = len(students)
-    num_groups = math.ceil(n / group_size)  # Nombre de groupes nécessaire
+    num_groups = math.ceil(n / group_size)
 
     names = [s["name"] for s in students]
-    name_to_idx = {name: i for i, name in enumerate(names)}  # Utilisé uniquement pour parser les prefs
+    name_to_idx = {name: i for i, name in enumerate(names)}
 
     # Variables x[i, g] = 1 si l'élève i est dans le groupe g
     x = {}
@@ -71,18 +72,25 @@ def group_students(students, group_size, num_preferences):
             for g in range(num_groups):
                 if solver.Value(x[i, g]) == 1:
                     if i in assigned:
-                        print(f"⚠️ Erreur : élève {names[i]} déjà assigné à un groupe.")
+                        print(f"Erreur : élève {names[i]} déjà assigné à un groupe.")
                     groups[g].append(names[i])
                     assigned.add(i)
 
-        print(f"✅ Solution trouvée avec score total = {solver.ObjectiveValue()}")
+        print(f"Solution trouvée avec score total = {solver.ObjectiveValue()}")
 
         for gi, grp in enumerate(groups):
             print(f"Groupe {gi+1} ({len(grp)} élèves) : {grp}")
         return groups
     else:
-        print("❌ Aucune solution trouvée avec cette taille de groupe.")
+        print("Aucune solution trouvée avec cette taille de groupe.")
         return None
+    
+def save_groups(groups):
+    # chemin vers data/group.json
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    out_file = os.path.abspath(os.path.join(base_dir, "../data/group.json"))
+    with open(out_file, "w", encoding="utf-8") as f:
+        json.dump(groups, f, ensure_ascii=False, indent=2)
 
 if __name__ == "__main__":
     import os
@@ -97,7 +105,9 @@ if __name__ == "__main__":
     students = load_students_from_file(file_path)
     print(f"{len(students)} élèves chargés.")
 
-    group_size = 6
+    group_size = 4
     num_preferences = 3
 
-    group_students(students, group_size, num_preferences)
+    groups = group_students(students, group_size, num_preferences)
+    if groups is not None:
+        save_groups(groups)
