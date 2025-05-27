@@ -38,15 +38,21 @@ def group_students(students, group_size, num_preferences):
         min_size = base_size + (1 if g < remainder else 0)
         model.Add(sum(x[i, g] for i in range(n)) == min_size)
 
-    # Compute weighted preference scores for each student pair.
+    # Compute weighted preference scores for each student pair,
+    # but first filter out any deleted students and re-index the ranks.
     pref_points = list(range(num_preferences, 0, -1))
     score = [[0]*n for _ in range(n)]
 
     for i, student in enumerate(students):
-        prefs = student["preferences"][:num_preferences]
+
+        raw_prefs   = student.get("preferences", [])
+        valid_prefs = [p for p in raw_prefs if p in name_to_idx]
+
+        prefs = valid_prefs[:num_preferences]
+
         for rank, p_name in enumerate(prefs):
-            j = name_to_idx.get(p_name)
-            if j is not None and j != i:
+            j = name_to_idx[p_name]
+            if j != i:
                 score[i][j] += pref_points[rank]
 
     # Build the objective: maximize mutual affinities within groups.
