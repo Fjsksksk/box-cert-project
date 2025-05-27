@@ -6,7 +6,8 @@ from werkzeug.security import check_password_hash
 
 
 app = Flask(__name__,
-    template_folder=os.path.join(os.path.dirname(__file__), '..', 'templates')
+    template_folder=os.path.join(os.path.dirname(__file__), '..', 'templates'),
+    static_folder=os.path.join(os.path.dirname(__file__), '..', 'static')
 )
 
 # Fonction pour connecter à la base de données
