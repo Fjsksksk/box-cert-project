@@ -1,0 +1,143 @@
+html, body {
+  font-family: Tahoma, sans-serif; 
+  height: 100%;
+  margin: 0;
+  background-image: url('../images/fond_menu.png');
+  background-size: auto;
+  background-repeat: repeat;
+  background-position: center;
+  overflow-x: hidden;
+}
+
+.background-container {
+  height: 100vh;
+  width: 100vw; 
+  position: relative; 
+}
+
+/***********************************************************************************/
+
+footer {
+  text-align: center;
+  padding: 10px 0;
+  color : #333;
+}
+
+/****************************************************************************************/
+/* Conteneur pour le SVG */
+.arc-text {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arc-text text {
+  font-size: 70px;
+  fill: #2b3a60;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); 
+  letter-spacing: 5px;
+  font-family: Tahoma, sans-serif;
+}
+
+.animated-letter {
+  opacity: 0;
+  animation: fadeInLetters 1s ease forwards;
+  animation-delay: calc(var(--i) * 0.2s);
+}
+
+@keyframes fadeInLetters {
+  from {
+      opacity: 0;
+      transform: translateX(-10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateX(0);
+  }
+}
+
+
+/*******************************************************************************************/
+
+/* Style pour le titre secondaire */
+.subtitle {
+  font-size: 36px;
+  color: #2b3a60;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.postit-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px; 
+  flex-wrap: wrap;
+  margin-top: 30px; 
+}
+
+.postit {
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  color: #2b3a60;
+  width: 250px; 
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+  background-color: transparent; 
+}
+
+.postit i {
+  font-size: 200px;
+  color: rgba(43, 58, 96, 0.2); 
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 0;
+}
+
+
+.postit p {
+  position: relative;
+  font-size: 24px; 
+  font-weight: bold;
+  z-index: 1;
+  margin-top: 10px;
+  color: #2b3a60;
+}
+
+.postit:hover {
+  transform: scale(1.1);
+}
+
+.postit:nth-child(1) i {
+  color: #9de3ab;
+}
+
+.postit:nth-child(2) i {
+  color: #dbe2e9; 
+}
+
+.postit:nth-child(3) i {
+  color: #a2b5c0; 
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .postit {
+      width: 250px; 
+      height: 250px;
+  }
+  .subtitle {
+      font-size: 28px;
+  }
+}
