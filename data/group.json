@@ -8,6 +8,7 @@
     "Noël Lucas"
   ],
   [
+<<<<<<< HEAD
     "Bernard Paul",
     "Durand Sophie",
     "Michel Julie",
@@ -16,6 +17,9 @@
     "Bertrand Yann"
   ],
   [
+=======
+    "Dupont Jean",
+>>>>>>> efbefa18b00b4af309f9d30aa980307460b108b4
     "Martin Alice",
     "Blanc Chloé",
     "Lefèvre Thomas",
@@ -29,5 +33,29 @@
     "Dubois Hugo",
     "Fournier Camille",
     "Marchand Maxime"
+<<<<<<< HEAD
+=======
+  ],
+  [
+    "Michel Julie",
+    "David Nicolas",
+    "Laurent Elise",
+    "Bertrand Yann"
+  ],
+  [
+    "Garcia Emma",
+    "Moreau Clara",
+    "Petit Lucas"
+  ],
+  [
+    "Lemoine Luc",
+    "Morel Sarah",
+    "Fernandez Ana"
+  ],
+  [
+    "Blanc Chloé",
+    "Lefèvre Thomas",
+    "Garnier Antoine"
+>>>>>>> efbefa18b00b4af309f9d30aa980307460b108b4
   ]
 ]
