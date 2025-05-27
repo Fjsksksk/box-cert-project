@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/styles.css" />
+    <link rel="shortcut icon" href="../styles/images/background.png" />
+    <!-- Icons  -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Animate.css for letter animation -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <title>GroupMate</title>
+  </head>
+  <body>
+    <!-- Main container for the background -->
+    <div class="background-container">
+      <!-- Title with letter-by-letter animation -->
+      <svg class="arc-text" viewBox="0 0 1000 300">
+          <path id="curve" fill="transparent" d="M100,250 Q500,0 900,250" />
+          <text width="1000">
+              <textPath href="#curve" startOffset="50%" text-anchor="middle">
+                  <tspan class="animated-letter" style="--i:1">G</tspan>
+                  <tspan class="animated-letter" style="--i:2">R</tspan>
+                  <tspan class="animated-letter" style="--i:3">O</tspan>
+                  <tspan class="animated-letter" style="--i:4">U</tspan>
+                  <tspan class="animated-letter" style="--i:5">P</tspan>
+                  <tspan class="animated-letter" style="--i:6"> </tspan>
+                  <tspan class="animated-letter" style="--i:7">M</tspan>
+                  <tspan class="animated-letter" style="--i:8">A</tspan>
+                  <tspan class="animated-letter" style="--i:9">T</tspan>
+                  <tspan class="animated-letter" style="--i:10">E</tspan>
+              </textPath>
+          </text>
+      </svg>
+
+      <h2 class="subtitle">As-tu un compte ?</h2>
+
+      <!-- Navigation menu -->
+      <div class="postit-container">
+        <a href="../templates/signup.html" class="postit">
+            <i class="bi bi-clipboard-fill"></i>
+            <br /><br /><p>Connexion</p>
+        </a>
+        <a href="../templates/signin.html" class="postit">
+            <i class="bi bi-clipboard-fill"></i>
+            <br /><br /><p>Inscription</p>
+        </a>
+      </div>
+      
+    </div>
+  </body>
+</html>
