@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Page Étudiant</title>
+</head>
+<body>
+    <h1>Bienvenue, {{ user.firstname }} {{ user.lastname }} !</h1>
+    <p>Vous êtes connecté en tant qu'étudiant.</p>
+
+    {% if not vote %}
+        <p>Le vote n'a pas encore été ouvert par le professeur. Veuillez patienter.</p>
+    {% else %}
+        <form action="{{ url_for('vote_submit') }}" method="POST">
+            <label for="select_vote">Choisissez un étudiant :</label>
+            <select id="select_vote" name="selected_student" required>
+                <option value="" disabled selected>-- Sélectionnez --</option>
+                {% for candidat in candidates %}
+                    <option value="{{ candidat.id }}">{{ candidat.lastname }} {{ candidat.firstname }}</option>
+                {% endfor %}
+            </select>
+
+            <br/><br/>
+
+            <label for="comment">Votre commentaire :</label><br/>
+            <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Écrivez ici..."></textarea>
+
+            <br/><br/>
+
+            <button type="submit">Envoyer mon vote</button>
+        </form>
+    {% endif %}
+
+    {% if groupes_definitifs %}
+        <h2>Groupes définitifs envoyés par le professeur :</h2>
+        <ul>
+            {% for groupe in groupes_definitifs %}
+                <li>
+                    <strong>Groupe {{ loop.index }} :</strong>
+                    <ul>
+                        {% for etudiant in groupe %}
+                            <li>{{ etudiant.lastname }} {{ etudiant.firstname }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <br/>
+    <a href="{{ url_for('signin') }}">Se déconnecter</a>
+</body>
+</html>
