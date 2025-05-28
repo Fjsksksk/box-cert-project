@@ -317,6 +317,8 @@ def teacher():
 
     
 
+
+
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     # Student dashboard: submit preferences
@@ -400,6 +402,8 @@ def student():
                            vote_open=preferences.get("vote_open", False))
 
 
+
+
 @app.route('/get_group', methods=['POST'])
 def get_group():
     # Route to retrieve the group of a specific student
@@ -430,6 +434,9 @@ def get_group():
         flash(f"Erreur lors de la lecture des groupes : {str(e)}", "danger")
 
     return redirect(url_for("student"))
+
+
+
 
 if __name__ == '__main__':
     # Start the app in debug mode

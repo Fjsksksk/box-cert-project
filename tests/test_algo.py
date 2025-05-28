@@ -2,7 +2,6 @@ import unittest
 import sys
 import os
 
-# Ajouter src/ au path pour importer algo.py
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 
 from algo import group_students
