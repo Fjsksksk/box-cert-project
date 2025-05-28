@@ -1,36 +1,65 @@
 [
-  [
-    "Martin Alice",
-    "Durand Sophie",
-    "Lemoine Luc",
-    "Garcia Emma",
-    "Moreau Clara"
-  ],
-  [
-    "Rousseau Léa",
-    "Dubois Hugo",
-    "Fournier Camille",
-    "Marchand Maxime",
-    "weinberg ben"
-  ],
-  [
-    "Blanc Chloé",
-    "Lefèvre Thomas",
-    "Morel Sarah",
-    "Garnier Antoine",
-    "Fernandez Ana"
-  ],
-  [
-    "Bernard Paul",
-    "Michel Julie",
-    "David Nicolas",
-    "Laurent Elise",
-    "Bertrand Yann"
-  ],
-  [
-    "Simon Claire",
-    "Girard Paul",
-    "Henry Marie",
-    "Noël Lucas"
-  ]
+  {
+    "groupe": [
+      "Paul",
+      "Lucie",
+      "Martin",
+      "Nina"
+    ],
+    "score": 250
+  },
+  {
+    "groupe": [
+      "Hugo",
+      "Clara",
+      "Victor",
+      "weinberg ben"
+    ],
+    "score": 200
+  },
+  {
+    "groupe": [
+      "Camille",
+      "Julien",
+      "Manon",
+      "Louis"
+    ],
+    "score": 300
+  },
+  {
+    "groupe": [
+      "Sarah",
+      "Antoine",
+      "Léa",
+      "Milo"
+    ],
+    "score": 300
+  },
+  {
+    "groupe": [
+      "Zoé",
+      "Lucas",
+      "Élise",
+      "Noah"
+    ],
+    "score": 300
+  },
+  {
+    "groupe": [
+      "Thomas",
+      "Emma",
+      "Léo",
+      "Léna"
+    ],
+    "score": 250
+  },
+  {
+    "groupe": [
+      "Jean Dupont",
+      "Alice",
+      "Bob",
+      "Marie Curie"
+    ],
+    "score": 400
+  }
 ]

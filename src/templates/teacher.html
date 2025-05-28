@@ -458,6 +458,7 @@
       {% endif %}
     {% endwith %}
 
+ 
 
     <div class="form-section">
       <h2>Contrôle du vote</h2>
@@ -503,50 +504,54 @@
     </div>
     
     {% if groups %}
-      <div class="groups-container">
-        <h3>Groupes générés :</h3>
-        
-        <div class="groups-stats">
-          <div class="stat-item">
-            <span class="stat-number">{{ groups|length }}</span>
-            <span class="stat-label">Groupes</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">{{ groups|map('length')|sum if groups else 0 }}</span>
-            <span class="stat-label">Étudiants</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number">{{ ((groups|map('length')|sum / groups|length)|round(1)) if groups else 0 }}</span>
-            <span class="stat-label">Moy/Groupe</span>
-          </div>
+    <div class="groups-container">
+      <h3>Groupes générés :</h3>
+      
+      <div class="groups-stats">
+        <div class="stat-item">
+          <span class="stat-number">{{ groups|length }}</span>
+          <span class="stat-label">Groupes</span>
         </div>
-
-        <table class="groups-table">
-          <thead>
-            <tr>
-              <th>Groupe</th>
-              <th>Membres</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for group in groups %}
-            <tr>
-              <td>
-                <div class="group-number-cell">
-                  Groupe {{ loop.index }}
-                </div>
-              </td>
-              <td class="group-members-cell">
-                {% for member in group %}
-                  <span class="member-tag">{{ member }}</span>
-                {% endfor %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <div class="stat-item">
+          <span class="stat-number">{{ groups | map(attribute="groupe") | map('length') | sum if groups else 0 }}</span>
+          <span class="stat-label">Étudiants</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">{{ ((groups | map(attribute="groupe") | map('length') | sum / groups|length)|round(1)) if groups else 0 }}</span>
+          <span class="stat-label">Moy/Groupe</span>
+        </div>
       </div>
-    {% endif %}
+
+      <table class="groups-table">
+        <thead>
+          <tr>
+            <th>Groupe</th>
+            <th>Membres</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for group in groups %}
+          <tr>
+            <td>
+              <div class="group-number-cell">
+                Groupe {{ loop.index }}
+              </div>
+            </td>
+            <td class="group-members-cell">
+              {% for member in group["groupe"] %}
+                <span class="member-tag">{{ member }}</span>
+              {% endfor %}
+            </td>
+            <td>
+              {{ group["score"] }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
   </div>
 </body>
 </html>

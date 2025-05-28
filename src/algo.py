@@ -4,73 +4,62 @@ from ortools.sat.python import cp_model
 import os
 
 
-
 def load_students_from_file(file_path):
-    # Load student records from a JSON file at the specified path.
     with open(file_path, "r", encoding="utf-8") as f:
-        students = json.load(f)
-    return students
+        return json.load(f)
 
-def group_students(students, group_size, num_preferences):
-    # Create the CP-SAT model for assigning students to groups.
+
+def group_students(students, group_size):
     model = cp_model.CpModel()
-
     n = len(students)
     num_groups = math.ceil(n / group_size)
 
     names = [s["name"] for s in students]
     name_to_idx = {name: i for i, name in enumerate(names)}
-    
-    # Define boolean variables x[i, g] = 1 if student i is assigned to group g.
+
+    # Variables d'affectation
     x = {}
     for i in range(n):
         for g in range(num_groups):
-            x[i, g] = model.NewBoolVar(f'x_{i}_{g}')
+            x[i, g] = model.NewBoolVar(f"x_{i}_{g}")
 
-    # Each student must be assigned to exactly one group.
+    # Chaque étudiant est dans un seul groupe
     for i in range(n):
         model.Add(sum(x[i, g] for g in range(num_groups)) == 1)
 
-    # Enforce group size constraints, distributing remainder evenly.
+    # Taille de chaque groupe
     base_size = n // num_groups
     remainder = n % num_groups
     for g in range(num_groups):
         min_size = base_size + (1 if g < remainder else 0)
         model.Add(sum(x[i, g] for i in range(n)) == min_size)
 
-    # Compute weighted preference scores for each student pair,
-    # but first filter out any deleted students and re-index the ranks.
-    pref_points = list(range(num_preferences, 0, -1))
-    score = [[0]*n for _ in range(n)]
+    # Construction de la matrice de scores basée sur les poids des préférences
+    score = [[0] * n for _ in range(n)]
+    for student in students:
+        i = name_to_idx[student["name"]]
+        for pref_name, weight in student.get("preferences", []):
+            if pref_name in name_to_idx:
+                j = name_to_idx[pref_name]
+                if i != j:
+                    score[i][j] = weight
 
-    for i, student in enumerate(students):
-
-        raw_prefs   = student.get("preferences", [])
-        valid_prefs = [p for p in raw_prefs if p in name_to_idx]
-
-        prefs = valid_prefs[:num_preferences]
-
-        for rank, p_name in enumerate(prefs):
-            j = name_to_idx[p_name]
-            if j != i:
-                score[i][j] += pref_points[rank]
-
-    # Build the objective: maximize mutual affinities within groups.
+    # Objectif : maximiser la somme des affinités mutuelles dans les groupes
     objective_terms = []
     for g in range(num_groups):
         for i in range(n):
-            for j in range(i+1, n):
-                same_group_ij = model.NewBoolVar(f'samegroup_{i}_{j}_g{g}')
-                model.AddBoolAnd([x[i, g], x[j, g]]).OnlyEnforceIf(same_group_ij)
-                model.AddBoolOr([x[i, g].Not(), x[j, g].Not()]).OnlyEnforceIf(same_group_ij.Not())
+            for j in range(i + 1, n):
+                same_group = model.NewBoolVar(f"samegroup_{i}_{j}_g{g}")
+                model.AddBoolAnd([x[i, g], x[j, g]]).OnlyEnforceIf(same_group)
+                model.AddBoolOr([x[i, g].Not(), x[j, g].Not()]).OnlyEnforceIf(same_group.Not())
 
-                weight = score[i][j] + score[j][i]
-                if weight > 0:
-                    objective_terms.append(weight * same_group_ij)
+                mutual_score = score[i][j] + score[j][i]
+                if mutual_score > 0:
+                    objective_terms.append(mutual_score * same_group)
 
     model.Maximize(sum(objective_terms))
 
-    # Solve the model and extract group assignments if feasible.
+    # Résolution
     solver = cp_model.CpSolver()
     status = solver.Solve(model)
 
@@ -80,47 +69,61 @@ def group_students(students, group_size, num_preferences):
 
         for i in range(n):
             for g in range(num_groups):
-                if solver.Value(x[i, g]) == 1:
-                    if i in assigned:
-                        print(f"Error: student {names[i]} is already assigned to a group.")
+                if solver.Value(x[i, g]):
                     groups[g].append(names[i])
                     assigned.add(i)
 
-        print(f"Solution found with total score = {solver.ObjectiveValue()}")
+        # Calcul des scores de satisfaction par groupe
+        group_scores = []
+        total_score = 0
+        for g, group in enumerate(groups):
+            group_score = 0
+            for i_idx in range(len(group)):
+                i = name_to_idx[group[i_idx]]
+                for j_idx in range(i_idx + 1, len(group)):
+                    j = name_to_idx[group[j_idx]]
+                    group_score += score[i][j] + score[j][i]
+            group_scores.append(group_score)
+            total_score += group_score
 
+        print(f"\n✅ Solution trouvée avec score total = {total_score}\n")
         for gi, grp in enumerate(groups):
-            print(f"Group {gi+1} ({len(grp)} students) : {grp}")
-        return groups
+            print(f"Groupe {gi+1} ({len(grp)} élèves) : {grp} — score = {group_scores[gi]}")
+        return groups, group_scores, total_score
     else:
-        print("No solution found with this group size.")
-        return None
-    
+        print("❌ Pas de solution trouvée.")
+        return None, None, None
 
-def save_groups(groups):
-    # Save the generated groups list to the JSON file at ../data/group.json.
+
+def save_groups(groups, group_scores):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     out_file = os.path.abspath(os.path.join(base_dir, "../data/group.json"))
+    
+    # Construire la nouvelle structure
+    groups_with_scores = []
+    for grp, score in zip(groups, group_scores):
+        groups_with_scores.append({
+            "groupe": grp,
+            "score": score
+        })
+    
     with open(out_file, "w", encoding="utf-8") as f:
-        json.dump(groups, f, ensure_ascii=False, indent=2)
+        json.dump(groups_with_scores, f, ensure_ascii=False, indent=2)
 
 
 
 if __name__ == "__main__":
-    import os
-
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.abspath(os.path.join(base_dir, "../data/choice.json"))
 
     if not os.path.isfile(file_path):
-        print(f"Error: file not found: {file_path}")
+        print(f"❌ Fichier non trouvé : {file_path}")
         exit(1)
 
     students = load_students_from_file(file_path)
-    print(f"{len(students)} students loaded.")
+    print(f"{len(students)} étudiants chargés.")
 
-    group_size = 4
-    num_preferences = 3
+    group_size = 4  # ⚠️ paramètre de taille de groupe, ajustable
 
-    groups = group_students(students, group_size, num_preferences)
-    if groups is not None:
-        save_groups(groups)
+    groups, group_scores= group_students(students, group_size)
+    save_groups(groups, group_scores)

@@ -160,6 +160,7 @@ def save_vote_open(state):
 
 
 
+
 def delete_student_from_choices(file_path, student_name):
     if not os.path.exists(file_path):
         return False
@@ -167,12 +168,12 @@ def delete_student_from_choices(file_path, student_name):
     with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    # Supprimer la personne concernée
-    data = [entry for entry in data if entry["name"] != student_name]
-
-    # Supprimer la personne des préférences des autres
+    # Supprimer la personne concernée des préférences des autres
     for entry in data:
-        entry["preferences"] = [pref for pref in entry["preferences"] if pref != student_name]
+        entry["preferences"] = [pref for pref in entry["preferences"] if pref[0] != student_name]
+
+    # Supprimer la personne concernée des données
+    data = [entry for entry in data if entry["name"] != student_name]
 
     # Sauvegarde
     with open(file_path, "w", encoding="utf-8") as f:
@@ -183,7 +184,7 @@ def delete_student_from_choices(file_path, student_name):
 @app.route('/teacher', methods=["GET", "POST"])
 def teacher():
     preferences = load_preferences()
-    num_preferences = load_preferences()["num_preferences"]
+    num_preferences = preferences["num_preferences"]
     groups = []
     show_confirm_buttons = False
 
@@ -200,15 +201,14 @@ def teacher():
                 students = load_students_from_file(CHOICES_FILE)
                 total_students = len(students)
 
-                # Si incompatibilité détectée et pas de confirmation
                 if total_students % group_size != 0 and 'confirm_generation' not in request.form:
                     flash(f"Incompatibilité : {total_students} étudiants ne peuvent pas être divisés en groupes de {group_size}.", "warning")
                     flash("Souhaitez-vous générer quand même ?", "info")
-                    show_confirm_buttons = True  # pour afficher les boutons
+                    show_confirm_buttons = True
                 else:
-                    groups = group_students(students, group_size, num_preferences)
+                    groups, group_scores, total_score = group_students(students, group_size)
                     if groups:
-                        save_groups(groups)
+                        save_groups(groups, group_scores)
                         flash("Groupes générés avec succès.", "success")
                     else:
                         flash("Impossible de générer les groupes. Essayez un autre nombre.", "danger")
@@ -216,7 +216,7 @@ def teacher():
                 flash(f"Erreur : {str(e)}", "danger")
         elif "vote_action" in request.form:
             action = request.form["vote_action"]
-            preferences["vote_open"] = (action == "open")  
+            preferences["vote_open"] = (action == "open")
             save_vote_open(action == "open")
             status = "ouvert" if action == "open" else "fermé"
             flash(f"Le vote a été {status}.", "info")
@@ -230,7 +230,7 @@ def teacher():
                     flash("Erreur lors de la suppression.", "danger")
             return redirect(url_for("teacher"))
 
-    # Charger groupes existants si présents
+    # Charger les groupes existants (avec la nouvelle structure JSON)
     if os.path.exists(GROUP_FILE):
         try:
             with open(GROUP_FILE, "r", encoding="utf-8") as f:
@@ -247,8 +247,6 @@ def teacher():
                 pass
 
     return render_template("teacher.html", num_preferences=num_preferences, groups=groups, show_confirm_buttons=show_confirm_buttons, all_students=all_students)
-
-
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     preferences = load_preferences()
@@ -268,9 +266,10 @@ def student():
             flash("Chaque étudiant ne peut être choisi qu'une seule fois.", "danger")
             return redirect(url_for("student"))
 
-        if sum(weights) != 100:
-            flash("La somme des poids doit être égale à 100.", "danger")
+        if sum(weights) > 100:
+            flash("La somme des poids ne doit pas dépasser 100.", "danger")
             return redirect(url_for("student"))
+
 
         # Préparer les préférences pour l'enregistrement
         preferences_list = [[name, weight] for name, weight in zip(selected_choices, weights)]
@@ -340,28 +339,36 @@ def get_group():
 
         found_group = None
         for group in groups:
-            if student_name in group:
+            if student_name in group["groupe"]:
                 found_group = group
                 break
 
         if found_group:
             # Exclure le nom de l'étudiant lui-même
-            others_in_group = [member for member in found_group if member.strip().lower() != student_name.strip().lower()]
+            others_in_group = [member for member in found_group["groupe"] if member.strip().lower() != student_name.strip().lower()]
             
             if others_in_group:
                 group_str = ", ".join(others_in_group)
-                flash(f"Vous êtes dans le groupe avec : {group_str}", "info")
+                flash(f"Vous êtes dans le groupe avec : {group_str} (Score : {found_group['score']})", "info")
             else:
                 flash("Vous êtes seul dans ce groupe.", "info")
-        else :
-            flash("Vous êtes assigné a aucun groupe pour le moment", "info")
+        else:
+            flash("Vous n'êtes assigné à aucun groupe pour le moment.", "info")
                 
     except Exception as e:
         flash(f"Erreur lors de la lecture des groupes : {str(e)}", "danger")
 
     return redirect(url_for("student"))
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+ 
+
+    
+
+
+    
 
 
 

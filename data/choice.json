@@ -3,12 +3,17 @@
     "name": "Jean Dupont",
     "preferences": [
       [
-        "Alice",
-        50
-      ],
-      [
         "Bob",
         50
+      ]
+    ]
+  },
+  {
+    "name": "Bob",
+    "preferences": [
+      [
+        "Jean Dupont",
+        70
       ]
     ]
   },
@@ -16,25 +21,254 @@
     "name": "Marie Curie",
     "preferences": [
       [
-        "Alice",
+        "Jean Dupont",
+        40
+      ]
+    ]
+  },
+  {
+    "name": "Thomas",
+    "preferences": [
+      [
+        "Bob",
         100
       ]
     ]
   },
   {
-    "name": "weinberg ben",
+    "name": "Emma",
     "preferences": [
       [
-        "Faure Léa",
-        25
-      ],
-      [
-        "martin max",
-        25
-      ],
-      [
-        "Alice",
+        "Marie Curie",
         50
+      ],
+      [
+        "Thomas",
+        50
+      ]
+    ]
+  },
+  {
+    "name": "Léo",
+    "preferences": [
+      [
+        "Emma",
+        70
+      ],
+      [
+        "Thomas",
+        30
+      ]
+    ]
+  },
+  {
+    "name": "Léna",
+    "preferences": [
+      [
+        "Léo",
+        40
+      ],
+      [
+        "Emma",
+        60
+      ]
+    ]
+  },
+  {
+    "name": "Paul",
+    "preferences": [
+      [
+        "Marie Curie",
+        30
+      ],
+      [
+        "Léo",
+        70
+      ]
+    ]
+  },
+  {
+    "name": "Lucie",
+    "preferences": [
+      [
+        "Paul",
+        50
+      ],
+      [
+        "Léna",
+        50
+      ]
+    ]
+  },
+  {
+    "name": "Martin",
+    "preferences": [
+      [
+        "Lucie",
+        100
+      ]
+    ]
+  },
+  {
+    "name": "Nina",
+    "preferences": [
+      [
+        "Martin",
+        60
+      ],
+      [
+        "Lucie",
+        40
+      ]
+    ]
+  },
+  {
+    "name": "Hugo",
+    "preferences": [
+      [
+        "Nina",
+        100
+      ]
+    ]
+  },
+  {
+    "name": "Clara",
+    "preferences": [
+      [
+        "Hugo",
+        100
+      ]
+    ]
+  },
+  {
+    "name": "Victor",
+    "preferences": [
+      [
+        "Clara",
+        50
+      ],
+      [
+        "Hugo",
+        50
+      ]
+    ]
+  },
+  {
+    "name": "Camille",
+    "preferences": [
+      [
+        "Victor",
+        70
+      ],
+      [
+        "Clara",
+        30
+      ]
+    ]
+  },
+  {
+    "name": "Julien",
+    "preferences": [
+      [
+        "Camille",
+        100
+      ]
+    ]
+  },
+  {
+    "name": "Manon",
+    "preferences": [
+      [
+        "Julien",
+        50
+      ],
+      [
+        "Camille",
+        50
+      ]
+    ]
+  },
+  {
+    "name": "Louis",
+    "preferences": [
+      [
+        "Manon",
+        60
+      ],
+      [
+        "Julien",
+        40
+      ]
+    ]
+  },
+  {
+    "name": "Sarah",
+    "preferences": [
+      [
+        "Louis",
+        100
+      ]
+    ]
+  },
+  {
+    "name": "Antoine",
+    "preferences": [
+      [
+        "Sarah",
+        100
+      ]
+    ]
+  },
+  {
+    "name": "Léa",
+    "preferences": [
+      [
+        "Antoine",
+        100
+      ]
+    ]
+  },
+  {
+    "name": "Milo",
+    "preferences": [
+      [
+        "Léa",
+        70
+      ],
+      [
+        "Antoine",
+        30
+      ]
+    ]
+  },
+  {
+    "name": "Zoé",
+    "preferences": [
+      [
+        "Milo",
+        100
+      ]
+    ]
+  },
+  {
+    "name": "Élise",
+    "preferences": [
+      [
+        "Lucas",
+        50
+      ],
+      [
+        "Zoé",
+        50
+      ]
+    ]
+  },
+  {
+    "name": "Noah",
+    "preferences": [
+      [
+        "Élise",
+        100
       ]
     ]
   }

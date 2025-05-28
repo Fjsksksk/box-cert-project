@@ -330,70 +330,70 @@
   </div>
 
    <!-- Données JSON séparées -->
-   <script id="otherStudentsData" type="application/json">
-    {{ other_students | tojson | safe }}
-  </script>
+    <script id="otherStudentsData" type="application/json">
+      {{ other_students | tojson | safe }}
+    </script>
+  
+    <script>
+      // Récupérer les autres étudiants depuis la balise JSON
+      const otherStudents = JSON.parse(document.getElementById("otherStudentsData").textContent);
+      const preferenceContainer = document.getElementById("preference-container");
+      const addPreferenceBtn = document.getElementById("add-preference");
 
-  <script>
-    // Récupérer les autres étudiants depuis la balise JSON
-    const otherStudents = JSON.parse(document.getElementById("otherStudentsData").textContent);
-    const preferenceContainer = document.getElementById("preference-container");
-    const addPreferenceBtn = document.getElementById("add-preference");
-
-    function updateDropdowns() {
-      const selects = preferenceContainer.querySelectorAll("select");
-      const selected = Array.from(selects).map(s => s.value).filter(v => v);
-      selects.forEach(select => {
-        const currentValue = select.value;
-        select.innerHTML = '<option value="" disabled>-- Sélectionnez un étudiant --</option>';
-        otherStudents.forEach(student => {
-          if (!selected.includes(student) || student === currentValue) {
-            const option = document.createElement("option");
-            option.value = student;
-            option.textContent = student;
-            if (student === currentValue) option.selected = true;
-            select.appendChild(option);
-          }
+      function updateDropdowns() {
+        const selects = preferenceContainer.querySelectorAll("select");
+        const selected = Array.from(selects).map(s => s.value).filter(v => v);
+        selects.forEach(select => {
+          const currentValue = select.value;
+          select.innerHTML = '<option value="" disabled>-- Sélectionnez un étudiant --</option>';
+          otherStudents.forEach(student => {
+            if (!selected.includes(student) || student === currentValue) {
+              const option = document.createElement("option");
+              option.value = student;
+              option.textContent = student;
+              if (student === currentValue) option.selected = true;
+              select.appendChild(option);
+            }
+          });
         });
-      });
-    }
+      }
 
-    addPreferenceBtn.addEventListener("click", () => {
-      if (preferenceContainer.children.length >= otherStudents.length) return;
+      addPreferenceBtn.addEventListener("click", () => {
+        if (preferenceContainer.children.length >= otherStudents.length) return;
 
-      const group = document.createElement("div");
-      group.className = "preference-group";
-      group.innerHTML = `
-        <select name="choices" required>
-          <option value="" disabled selected>-- Sélectionnez un étudiant --</option>
-          ${otherStudents.map(student => `<option value="${student}">${student}</option>`).join("")}
-        </select>
-        <input type="number" name="weights" min="1" max="100" required placeholder="Poids">
-        <button type="button" class="remove-btn">-</button>
-      `;
-      preferenceContainer.appendChild(group);
-      updateDropdowns();
-    });
-
-    preferenceContainer.addEventListener("click", (e) => {
-      if (e.target.classList.contains("remove-btn")) {
-        e.target.parentElement.remove();
+        const group = document.createElement("div");
+        group.className = "preference-group";
+        group.innerHTML = `
+          <select name="choices" required>
+            <option value="" disabled selected>-- Sélectionnez un étudiant --</option>
+            ${otherStudents.map(student => `<option value="${student}">${student}</option>`).join("")}
+          </select>
+          <input type="number" name="weights" min="1" max="100" required placeholder="Poids">
+          <button type="button" class="remove-btn">-</button>
+        `;
+        preferenceContainer.appendChild(group);
         updateDropdowns();
-      }
-    });
+      });
 
-    preferenceContainer.addEventListener("change", updateDropdowns);
-    updateDropdowns();
+      preferenceContainer.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-btn")) {
+          e.target.parentElement.remove();
+          updateDropdowns();
+        }
+      });
 
-    document.getElementById("preference-form").addEventListener("submit", (e) => {
-      const weights = Array.from(preferenceContainer.querySelectorAll("input[name='weights']")).map(input => parseInt(input.value) || 0);
-      const sum = weights.reduce((a, b) => a + b, 0);
-      if (sum !== 100) {
-        e.preventDefault();
-        alert("La somme des poids doit être égale à 100.");
-      }
-    });
-  </script>
+      preferenceContainer.addEventListener("change", updateDropdowns);
+      updateDropdowns();
+
+      document.getElementById("preference-form").addEventListener("submit", (e) => {
+        const weights = Array.from(preferenceContainer.querySelectorAll("input[name='weights']")).map(input => parseInt(input.value) || 0);
+        const sum = weights.reduce((a, b) => a + b, 0);
+        if (sum > 100) {
+            e.preventDefault();
+            alert("La somme des poids ne doit pas dépasser 100.");
+        }
+      });
+    </script>
 </body>
 
 </html>
