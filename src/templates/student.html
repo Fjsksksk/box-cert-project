@@ -9,14 +9,21 @@
   </head>
 
 <body>
+   <!-- Main content container -->
   <div class="container">
+    <!-- Greeting with student's first and last name -->
     <h1>Bienvenue, {{ user.firstname }} {{ user.lastname }} !</h1>
     <p class="welcome-text">Vous êtes connecté en tant qu'étudiant.</p>
-
+    
+    <!-- Conditional: display voting form only if vote is open -->
     {% if vote_open %}
       <div class="vote-section">
+
+        <!-- Preference selection form -->
         <form method="POST" id="preference-form">
           <p class="vote-instruction">Choisissez vos préférences. La somme des poids doit être égale à un maximum de 100.</p>
+          
+          <!-- Container for preference groups -->
           <div id="preference-container">
             <div class="preference-group">
               <select name="choices" required>
@@ -25,17 +32,30 @@
                   <option value="{{ student }}">{{ student }}</option>
                 {% endfor %}
               </select>
+
+              <!-- Weight input for selected student -->
               <input type="number" name="weights" min="1" max="100" required placeholder="Poids">
             </div>
           </div>
+
+          <!-- Button to add a new preference line -->
           <button type="button" id="add-preference">+</button>
+
+          <!-- Hidden input to pass current student's name -->
           <input type="hidden" name="student_name" value="{{ user.lastname }} {{ user.firstname }}">
+
+          <!-- Submit button -->
           <button type="submit" class="submit-btn">Envoyer mes préférences</button>
+
         </form>
       </div>
+
+      <!-- Display message if vote is not yet open -->
     {% else %}
       <div class="waiting-section">
         <p class="waiting-text">Le vote n'a pas encore été ouvert par le professeur. Veuillez patienter.</p>
+        
+        <!-- Form to view group assignment -->
         <form action="{{ url_for('get_group') }}" method="POST">
           <input type="hidden" name="student_name" value="{{ user.lastname }} {{ user.firstname }}">
           <button type="submit" class="group-btn">Afficher mon groupe</button>
@@ -43,6 +63,7 @@
       </div>
     {% endif %}
 
+    <!-- Display flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <ul class="flashes">
@@ -53,22 +74,25 @@
       {% endif %}
     {% endwith %}
 
+    <!-- Logout link -->
     <div class="footer">
       <a href="{{ url_for('signin') }}" class="logout-link">Se déconnecter</a>
     </div>
+
   </div>
 
-   <!-- Données JSON séparées -->
+     <!-- Inject student list into a JSON script block -->
     <script id="otherStudentsData" type="application/json">
       {{ other_students | tojson | safe }}
     </script>
   
     <script>
-      // Récupérer les autres étudiants depuis la balise JSON
+      // Parse the list of other students from JSON
       const otherStudents = JSON.parse(document.getElementById("otherStudentsData").textContent);
       const preferenceContainer = document.getElementById("preference-container");
       const addPreferenceBtn = document.getElementById("add-preference");
 
+      // Update dropdowns to prevent duplicate student selections
       function updateDropdowns() {
         const selects = preferenceContainer.querySelectorAll("select");
         const selected = Array.from(selects).map(s => s.value).filter(v => v);
@@ -87,6 +111,7 @@
         });
       }
 
+      // Add new preference group on "+" button click
       addPreferenceBtn.addEventListener("click", () => {
         if (preferenceContainer.children.length >= otherStudents.length) return;
 
@@ -104,6 +129,7 @@
         updateDropdowns();
       });
 
+      // Remove a preference group on "-" button click
       preferenceContainer.addEventListener("click", (e) => {
         if (e.target.classList.contains("remove-btn")) {
           e.target.parentElement.remove();
@@ -111,9 +137,11 @@
         }
       });
 
+      // Update dropdowns when selection changes
       preferenceContainer.addEventListener("change", updateDropdowns);
       updateDropdowns();
 
+      // Validate form submission: weights must sum to max 100
       document.getElementById("preference-form").addEventListener("submit", (e) => {
         const weights = Array.from(preferenceContainer.querySelectorAll("input[name='weights']")).map(input => parseInt(input.value) || 0);
         const sum = weights.reduce((a, b) => a + b, 0);
@@ -123,6 +151,7 @@
         }
       });
     </script>
+    
 </body>
 
 </html>

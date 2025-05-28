@@ -1,455 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Page Enseignant</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='templates.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/background.png') }}" />
+    <title>Enseignant</title>
+  </head>
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
-      color: #333;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      padding: 40px;
-      animation: fadeIn 0.6s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    h1 {
-      color: #2c3e50;
-      text-align: center;
-      margin-bottom: 40px;
-      font-size: 2.5em;
-      font-weight: 300;
-      letter-spacing: -0.5px;
-    }
-
-    h2 {
-      color: #34495e;
-      margin: 30px 0 20px;
-      font-size: 1.5em;
-      font-weight: 500;
-      border-bottom: 2px solid #ecf0f1;
-      padding-bottom: 10px;
-    }
-
-    h3 {
-      color: #2c3e50;
-      margin: 20px 0 15px;
-      font-size: 1.3em;
-      font-weight: 500;
-    }
-
-    /* Alert Messages */
-    .alert {
-      padding: 15px 20px;
-      margin: 15px 0;
-      border-radius: 8px;
-      font-weight: 500;
-      border-left: 4px solid;
-    }
-
-    .alert-success {
-      background: #d4edda;
-      color: #155724;
-      border-left-color: #28a745;
-    }
-
-    .alert-danger {
-      background: #f8d7da;
-      color: #721c24;
-      border-left-color: #dc3545;
-    }
-
-    .alert-warning {
-      background: #fff3cd;
-      color: #856404;
-      border-left-color: #ffc107;
-    }
-
-    .alert-info {
-      background: #d1ecf1;
-      color: #0c5460;
-      border-left-color: #17a2b8;
-    }
-
-    /* Form Sections */
-    .form-section {
-      background: #f8f9fa;
-      padding: 25px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      border: 1px solid #e9ecef;
-      transition: all 0.3s ease;
-    }
-
-    .form-section:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Form Elements */
-    .form-label {
-      display: block;
-      font-weight: 600;
-      color: #495057;
-      margin-bottom: 8px;
-      font-size: 1em;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #e9ecef;
-      border-radius: 6px;
-      font-size: 1em;
-      background: white;
-      transition: all 0.3s ease;
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    }
-
-    .form-control.w-25 {
-      width: 25%;
-      min-width: 150px;
-    }
-
-    .form-select {
-      width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #e9ecef;
-      border-radius: 6px;
-      font-size: 1em;
-      background: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .form-select:focus {
-      outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    }
-
-    .form-select.w-50 {
-      width: 50%;
-      min-width: 250px;
-    }
-
-    /* Buttons */
-    .btn {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 6px;
-      font-size: 1em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-      margin: 5px 10px 5px 0;
-      text-align: center;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #2980b9, #3498db);
-    }
-
-    .btn-success {
-      background: linear-gradient(135deg, #27ae60, #2ecc71);
-      color: white;
-    }
-
-    .btn-success:hover {
-      background: linear-gradient(135deg, #2ecc71, #27ae60);
-    }
-
-    .btn-danger {
-      background: linear-gradient(135deg, #e74c3c, #c0392b);
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: linear-gradient(135deg, #c0392b, #e74c3c);
-    }
-
-    .btn-warning {
-      background: linear-gradient(135deg, #f39c12, #e67e22);
-      color: white;
-    }
-
-    .btn-warning:hover {
-      background: linear-gradient(135deg, #e67e22, #f39c12);
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      background: linear-gradient(135deg, #7f8c8d, #95a5a6);
-    }
-
-    /* Control Buttons Section */
-    .vote-controls {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    /* Groups Display - Table Style */
-    .groups-container {
-      background: #f8f9fa;
-      padding: 25px;
-      border-radius: 10px;
-      margin-top: 30px;
-      border: 1px solid #e9ecef;
-    }
-
-    .groups-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
-    }
-
-    .groups-table thead {
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      color: white;
-    }
-
-    .groups-table th {
-      padding: 18px 20px;
-      text-align: left;
-      font-weight: 600;
-      font-size: 1.1em;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .groups-table th:first-child {
-      border-radius: 10px 0 0 0;
-      width: 150px;
-    }
-
-    .groups-table th:last-child {
-      border-radius: 0 10px 0 0;
-    }
-
-    .groups-table tbody tr {
-      transition: all 0.3s ease;
-      border-bottom: 1px solid #f1f3f4;
-    }
-
-    .groups-table tbody tr:hover {
-      background: linear-gradient(90deg, #f8f9fa, #ffffff);
-      transform: scale(1.01);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .groups-table tbody tr:last-child {
-      border-bottom: none;
-    }
-
-    .groups-table td {
-      padding: 16px 20px;
-      vertical-align: middle;
-    }
-
-    .group-number-cell {
-      font-weight: 700;
-      color: #2c3e50;
-      background: linear-gradient(135deg, #ecf0f1, #bdc3c7);
-      border-radius: 25px;
-      padding: 8px 16px;
-      display: inline-block;
-      min-width: 80px;
-      text-align: center;
-      font-size: 0.9em;
-      letter-spacing: 1px;
-    }
-
-    .group-members-cell {
-      color: #34495e;
-      line-height: 1.6;
-    }
-
-    .member-tag {
-      display: inline-block;
-      background: linear-gradient(135deg, #e8f4f8, #d5e8f0);
-      color: #2c3e50;
-      padding: 6px 12px;
-      margin: 2px 4px 2px 0;
-      border-radius: 20px;
-      font-size: 0.9em;
-      font-weight: 500;
-      border: 1px solid #bdc3c7;
-      transition: all 0.2s ease;
-    }
-
-    .member-tag:hover {
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      color: white;
-      transform: translateY(-1px);
-    }
-
-    .groups-stats {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: white;
-      padding: 15px 20px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      border: 1px solid #e9ecef;
-    }
-
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 1.8em;
-      font-weight: 700;
-      color: #3498db;
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 0.9em;
-      color: #7f8c8d;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Separator */
-    hr {
-      border: none;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #bdc3c7, transparent);
-      margin: 30px 0;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .container {
-        padding: 20px;
-        margin: 10px;
-      }
-
-      h1 {
-        font-size: 2em;
-      }
-
-      .form-control.w-25,
-      .form-select.w-50 {
-        width: 100%;
-        min-width: auto;
-      }
-
-      .vote-controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .btn {
-        width: 100%;
-        margin: 5px 0;
-      }
-    }
-
-    /* Form animations */
-    .form-section {
-      animation: slideIn 0.5s ease-out forwards;
-    }
-
-    .form-section:nth-child(2) { animation-delay: 0.1s; }
-    .form-section:nth-child(3) { animation-delay: 0.2s; }
-    .form-section:nth-child(4) { animation-delay: 0.3s; }
-    .form-section:nth-child(5) { animation-delay: 0.4s; }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-
-    /* Status indicators */
-    .status-indicator {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-right: 8px;
-    }
-
-    .status-open {
-      background: #27ae60;
-      box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.2);
-    }
-
-    .status-closed {
-      background: #e74c3c;
-      box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.2);
-    }
-  </style>
-</head>
 <body>
+  <!-- Main page container -->
   <div class="container">
     <h1>Page Enseignant</h1>
 
+    <!-- Flash message section (e.g. success, error) -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, msg in messages %}
@@ -459,7 +23,7 @@
     {% endwith %}
 
  
-
+    <!-- Voting control section: open or close voting -->
     <div class="form-section">
       <h2>Contrôle du vote</h2>
       <form method="post" class="vote-controls">
@@ -472,6 +36,7 @@
       </form>
     </div>
 
+    <!-- Student management section: delete a student -->
     <div class="form-section">
       <h2>Gestion des élèves</h2>
       <form method="post">
@@ -486,27 +51,32 @@
       </form>
     </div>
 
+    <!-- Group generation section -->
     <div class="form-section">
       <h2>Génération de groupes</h2>
       <form method="post">
         <label for="group_size" class="form-label">Nombre de personnes par groupe :</label>
         <input type="number" min="1" class="form-control w-25" name="group_size" required>
       
+        <!-- Conditional confirmation buttons if needed -->
         {% if show_confirm_buttons %}
           <div class="mt-3 vote-controls">
             <button type="submit" name="confirm_generation" value="1" class="btn btn-warning">Générer quand même</button>
             <a href="{{ url_for('teacher') }}" class="btn btn-secondary">Abandonner</a>
           </div>
         {% else %}
+          <!-- Normal generate button -->
           <button type="submit" name="generate_groups" value="1" class="btn btn-success mt-3">Générer les groupes</button>
         {% endif %}
       </form>
     </div>
     
+    <!-- Display generated groups if they exist -->
     {% if groups %}
     <div class="groups-container">
       <h3>Groupes générés :</h3>
       
+      <!-- Group statistics (number of groups, total students, average per group) -->
       <div class="groups-stats">
         <div class="stat-item">
           <span class="stat-number">{{ groups|length }}</span>
@@ -522,6 +92,7 @@
         </div>
       </div>
 
+      <!-- Table displaying group members and scores -->
       <table class="groups-table">
         <thead>
           <tr>
@@ -551,13 +122,17 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Display total score of all groups -->
     <div class="total-score mt-3">
       <strong>Score total :</strong> {{ groups | sum(attribute="score") }}
     </div>
     
   {% endif %}
   </div>
-  <form method="post" class="mt-4">
+  
+  <!-- Button to delete all groups -->
+  <form method="post" style="text-align: center; margin-top: 30px; margin-bottom:20px;" class="mt-4">
     <button type="submit" name="delete_groups" value="1" class="btn btn-danger">Supprimer les groupes</button>
   </form>
   
