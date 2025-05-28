@@ -229,6 +229,15 @@ def teacher():
                 else:
                     flash("Erreur lors de la suppression.", "danger")
             return redirect(url_for("teacher"))
+        elif 'delete_groups' in request.form:
+            try:
+                with open(GROUP_FILE, "w", encoding="utf-8") as f:
+                    json.dump([], f, ensure_ascii=False, indent=2)
+                flash("Tous les groupes ont été supprimés.", "success")
+            except Exception as e:
+                flash(f"Erreur lors de la suppression des groupes : {str(e)}", "danger")
+            return redirect(url_for("teacher"))
+
 
     # Charger les groupes existants (avec la nouvelle structure JSON)
     if os.path.exists(GROUP_FILE):

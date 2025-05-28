@@ -551,7 +551,15 @@
         </tbody>
       </table>
     </div>
+    <div class="total-score mt-3">
+      <strong>Score total :</strong> {{ groups | sum(attribute="score") }}
+    </div>
+    
   {% endif %}
   </div>
+  <form method="post" class="mt-4">
+    <button type="submit" name="delete_groups" value="1" class="btn btn-danger">Supprimer les groupes</button>
+  </form>
+  
 </body>
 </html>
