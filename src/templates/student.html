@@ -280,52 +280,120 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Bienvenue, {{ user.firstname }} {{ user.lastname }} !</h1>
-        <p class="welcome-text">Vous êtes connecté en tant qu'étudiant.</p>
+  <div class="container">
+    <h1>Bienvenue, {{ user.firstname }} {{ user.lastname }} !</h1>
+    <p class="welcome-text">Vous êtes connecté en tant qu'étudiant.</p>
 
-        {% if vote_open %}
-            <div class="vote-section">
-                <form method="POST">
-                    <p class="vote-instruction">Choisissez {{ num_preferences }} personne(s) avec qui vous préférez travailler :</p>
-                    {% for i in range(num_preferences) %}
-                        <div class="preference-group">
-                            <label for="choice_{{ i }}">Préférence {{ i + 1 }} :</label>
-                            <select name="choices" id="choice_{{ i }}" required>
-                                <option value="" disabled selected>-- Sélectionnez un étudiant --</option>
-                                {% for student in other_students %}
-                                    <option value="{{ student }}">{{ student }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    {% endfor %}
-                    <input type="hidden" name="student_name" value="{{ user.lastname }} {{ user.firstname }}">
-                    <button type="submit" class="submit-btn">Envoyer mes préférences</button>
-                </form>
-            </div>
-        {% else %}
-            <div class="waiting-section">
-                <p class="waiting-text">Le vote n'a pas encore été ouvert par le professeur. Veuillez patienter.</p>
-                <form action="{{ url_for('get_group') }}" method="POST">
-                    <input type="hidden" name="student_name" value="{{ user.lastname }} {{ user.firstname }}">
-                    <button type="submit" class="group-btn">Afficher mon groupe</button>
-                </form>
-            </div>
-            
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flashes">
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
+    {% if vote_open %}
+      <div class="vote-section">
+        <form method="POST" id="preference-form">
+          <p class="vote-instruction">Choisissez vos préférences. La somme des poids doit être égale à 100.</p>
+          <div id="preference-container">
+            <div class="preference-group">
+              <select name="choices" required>
+                <option value="" disabled selected>-- Sélectionnez un étudiant --</option>
+                {% for student in other_students %}
+                  <option value="{{ student }}">{{ student }}</option>
                 {% endfor %}
-                </ul>
-            {% endif %}
-            {% endwith %}
-        {% endif %}
+              </select>
+              <input type="number" name="weights" min="1" max="100" required placeholder="Poids">
+            </div>
+          </div>
+          <button type="button" id="add-preference">+</button>
+          <input type="hidden" name="student_name" value="{{ user.lastname }} {{ user.firstname }}">
+          <button type="submit" class="submit-btn">Envoyer mes préférences</button>
+        </form>
+      </div>
+    {% else %}
+      <div class="waiting-section">
+        <p class="waiting-text">Le vote n'a pas encore été ouvert par le professeur. Veuillez patienter.</p>
+        <form action="{{ url_for('get_group') }}" method="POST">
+          <input type="hidden" name="student_name" value="{{ user.lastname }} {{ user.firstname }}">
+          <button type="submit" class="group-btn">Afficher mon groupe</button>
+        </form>
+      </div>
+    {% endif %}
 
-        <div class="footer">
-            <a href="{{ url_for('signin') }}" class="logout-link">Se déconnecter</a>
-        </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <div class="footer">
+      <a href="{{ url_for('signin') }}" class="logout-link">Se déconnecter</a>
     </div>
+  </div>
+
+   <!-- Données JSON séparées -->
+   <script id="otherStudentsData" type="application/json">
+    {{ other_students | tojson | safe }}
+  </script>
+
+  <script>
+    // Récupérer les autres étudiants depuis la balise JSON
+    const otherStudents = JSON.parse(document.getElementById("otherStudentsData").textContent);
+    const preferenceContainer = document.getElementById("preference-container");
+    const addPreferenceBtn = document.getElementById("add-preference");
+
+    function updateDropdowns() {
+      const selects = preferenceContainer.querySelectorAll("select");
+      const selected = Array.from(selects).map(s => s.value).filter(v => v);
+      selects.forEach(select => {
+        const currentValue = select.value;
+        select.innerHTML = '<option value="" disabled>-- Sélectionnez un étudiant --</option>';
+        otherStudents.forEach(student => {
+          if (!selected.includes(student) || student === currentValue) {
+            const option = document.createElement("option");
+            option.value = student;
+            option.textContent = student;
+            if (student === currentValue) option.selected = true;
+            select.appendChild(option);
+          }
+        });
+      });
+    }
+
+    addPreferenceBtn.addEventListener("click", () => {
+      if (preferenceContainer.children.length >= otherStudents.length) return;
+
+      const group = document.createElement("div");
+      group.className = "preference-group";
+      group.innerHTML = `
+        <select name="choices" required>
+          <option value="" disabled selected>-- Sélectionnez un étudiant --</option>
+          ${otherStudents.map(student => `<option value="${student}">${student}</option>`).join("")}
+        </select>
+        <input type="number" name="weights" min="1" max="100" required placeholder="Poids">
+        <button type="button" class="remove-btn">-</button>
+      `;
+      preferenceContainer.appendChild(group);
+      updateDropdowns();
+    });
+
+    preferenceContainer.addEventListener("click", (e) => {
+      if (e.target.classList.contains("remove-btn")) {
+        e.target.parentElement.remove();
+        updateDropdowns();
+      }
+    });
+
+    preferenceContainer.addEventListener("change", updateDropdowns);
+    updateDropdowns();
+
+    document.getElementById("preference-form").addEventListener("submit", (e) => {
+      const weights = Array.from(preferenceContainer.querySelectorAll("input[name='weights']")).map(input => parseInt(input.value) || 0);
+      const sum = weights.reduce((a, b) => a + b, 0);
+      if (sum !== 100) {
+        e.preventDefault();
+        alert("La somme des poids doit être égale à 100.");
+      }
+    });
+  </script>
 </body>
+
 </html>

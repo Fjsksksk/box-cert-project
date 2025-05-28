@@ -1,190 +1,41 @@
 [
   {
-    "name": "Martin Alice",
+    "name": "Jean Dupont",
     "preferences": [
-      "Durand Sophie",
-      "Bernard Paul"
+      [
+        "Alice",
+        50
+      ],
+      [
+        "Bob",
+        50
+      ]
     ]
   },
   {
-    "name": "Bernard Paul",
+    "name": "Marie Curie",
     "preferences": [
-      "Durand Sophie",
-      "Martin Alice"
-    ]
-  },
-  {
-    "name": "Durand Sophie",
-    "preferences": [
-      "Martin Alice",
-      "Bernard Paul"
-    ]
-  },
-  {
-    "name": "Lemoine Luc",
-    "preferences": [
-      "Garcia Emma",
-      "Moreau Clara"
-    ]
-  },
-  {
-    "name": "Garcia Emma",
-    "preferences": [
-      "Lemoine Luc",
-      "Moreau Clara"
-    ]
-  },
-  {
-    "name": "Moreau Clara",
-    "preferences": [
-      "Lemoine Luc",
-      "Garcia Emma"
-    ]
-  },
-  {
-    "name": "Rousseau Léa",
-    "preferences": [
-      "Dubois Hugo",
-      "Fournier Camille",
-      "Marchand Maxime"
-    ]
-  },
-  {
-    "name": "Dubois Hugo",
-    "preferences": [
-      "Fournier Camille",
-      "Marchand Maxime",
-      "Rousseau Léa"
-    ]
-  },
-  {
-    "name": "Fournier Camille",
-    "preferences": [
-      "Marchand Maxime",
-      "Rousseau Léa",
-      "Dubois Hugo"
-    ]
-  },
-  {
-    "name": "Marchand Maxime",
-    "preferences": [
-      "Rousseau Léa",
-      "Dubois Hugo",
-      "Fournier Camille"
-    ]
-  },
-  {
-    "name": "Blanc Chloé",
-    "preferences": [
-      "Lefèvre Thomas",
-      "Morel Sarah",
-      "Garnier Antoine"
-    ]
-  },
-  {
-    "name": "Lefèvre Thomas",
-    "preferences": [
-      "Morel Sarah",
-      "Garnier Antoine",
-      "Blanc Chloé"
-    ]
-  },
-  {
-    "name": "Morel Sarah",
-    "preferences": [
-      "Garnier Antoine",
-      "Blanc Chloé",
-      "Lefèvre Thomas"
-    ]
-  },
-  {
-    "name": "Garnier Antoine",
-    "preferences": [
-      "Blanc Chloé",
-      "Lefèvre Thomas",
-      "Morel Sarah"
-    ]
-  },
-  {
-    "name": "Michel Julie",
-    "preferences": [
-      "David Nicolas",
-      "Laurent Elise",
-      "Bertrand Yann"
-    ]
-  },
-  {
-    "name": "David Nicolas",
-    "preferences": [
-      "Laurent Elise",
-      "Bertrand Yann",
-      "Michel Julie"
-    ]
-  },
-  {
-    "name": "Laurent Elise",
-    "preferences": [
-      "Bertrand Yann",
-      "Michel Julie",
-      "David Nicolas"
-    ]
-  },
-  {
-    "name": "Bertrand Yann",
-    "preferences": [
-      "Michel Julie",
-      "David Nicolas",
-      "Laurent Elise"
-    ]
-  },
-  {
-    "name": "Simon Claire",
-    "preferences": [
-      "Girard Paul",
-      "Henry Marie",
-      "Noël Lucas"
-    ]
-  },
-  {
-    "name": "Girard Paul",
-    "preferences": [
-      "Henry Marie",
-      "Noël Lucas",
-      "Simon Claire"
-    ]
-  },
-  {
-    "name": "Henry Marie",
-    "preferences": [
-      "Noël Lucas",
-      "Simon Claire",
-      "Girard Paul"
-    ]
-  },
-  {
-    "name": "Noël Lucas",
-    "preferences": [
-      "Simon Claire",
-      "Girard Paul",
-      "Henry Marie"
-    ]
-  },
-  {
-    "name": "Fernandez Ana",
-    "preferences": [
-      "Morel Sarah",
-      "Lemoine Luc",
-      "Martin Alice"
+      [
+        "Alice",
+        100
+      ]
     ]
   },
   {
     "name": "weinberg ben",
     "preferences": [
-      "Faure Léa",
-      "Roux Nathan",
-      "Michel Mathis",
-      "Henry Jules",
-      "Garnier Louis"
+      [
+        "Faure Léa",
+        25
+      ],
+      [
+        "martin max",
+        25
+      ],
+      [
+        "Alice",
+        50
+      ]
     ]
   }
 ]

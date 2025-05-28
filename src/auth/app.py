@@ -252,50 +252,64 @@ def teacher():
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     preferences = load_preferences()
-    num_preferences = preferences.get("num_preferences", 0)
 
     if request.method == "POST":
         student_name = request.form.get("student_name").strip()
         selected_choices = request.form.getlist("choices")
+        weights = request.form.getlist("weights")
 
-        if len(set(selected_choices)) != num_preferences:
-            flash(f"Vous devez sélectionner exactement {num_preferences} personne(s) différentes.", "danger")
-        else:
-            # Charger les données existantes
-            if os.path.exists(CHOICES_FILE):
-                with open(CHOICES_FILE, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-            else:
-                data = []
-
-            # Chercher si l'étudiant a déjà voté
-            updated = False
-            for entry in data:
-                if entry["name"] == student_name:
-                    entry["preferences"] = selected_choices
-                    updated = True
-                    break
-
-            if not updated:
-                data.append({
-                    "name": student_name,
-                    "preferences": selected_choices
-                })
-
-            os.makedirs(os.path.dirname(CHOICES_FILE), exist_ok=True)
-            with open(CHOICES_FILE, "w", encoding="utf-8") as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-
-            flash("Vos préférences ont bien été enregistrées ou mises à jour.", "success")
+        try:
+            weights = [int(w) for w in weights]
+        except ValueError:
+            flash("Les poids doivent être des nombres valides.", "danger")
             return redirect(url_for("student"))
 
-    # Chargement des autres étudiants
+        if len(set(selected_choices)) != len(selected_choices):
+            flash("Chaque étudiant ne peut être choisi qu'une seule fois.", "danger")
+            return redirect(url_for("student"))
+
+        if sum(weights) != 100:
+            flash("La somme des poids doit être égale à 100.", "danger")
+            return redirect(url_for("student"))
+
+        # Préparer les préférences pour l'enregistrement
+        preferences_list = [[name, weight] for name, weight in zip(selected_choices, weights)]
+
+        # Charger les choix existants
+        if os.path.exists(CHOICES_FILE):
+            with open(CHOICES_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        else:
+            data = []
+
+        # Mettre à jour ou ajouter les préférences
+        updated = False
+        for entry in data:
+            if entry["name"] == student_name:
+                entry["preferences"] = preferences_list
+                updated = True
+                break
+
+        if not updated:
+            data.append({
+                "name": student_name,
+                "preferences": preferences_list
+            })
+
+        os.makedirs(os.path.dirname(CHOICES_FILE), exist_ok=True)
+        with open(CHOICES_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+
+        flash("Vos préférences ont bien été enregistrées ou mises à jour.", "success")
+        return redirect(url_for("student"))
+
+    # Charger les autres étudiants
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT CONCAT(lastname, ' ', firstname) AS full_name 
-            FROM users 
+            SELECT CONCAT(lastname, ' ', firstname) AS full_name
+            FROM users
             WHERE role = 'student'
         """)
         students = [row[0] for row in cursor.fetchall()]
@@ -309,11 +323,9 @@ def student():
     user = session.get("user")
     full_name = f"{user['lastname']} {user['firstname']}"
     students = [s for s in students if s != full_name]
-  
 
-    return render_template("student.html", 
-                           num_preferences=num_preferences, 
-                           other_students=students, 
+    return render_template("student.html",
+                           other_students=students,
                            user=user,
                            vote_open=preferences.get("vote_open", False))
 
@@ -350,4 +362,6 @@ def get_group():
     return redirect(url_for("student"))
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 
