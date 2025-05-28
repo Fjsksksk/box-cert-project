@@ -17,16 +17,8 @@ html, body {
   position: relative; 
 }
 
-/***********************************************************************************/
-
-footer {
-  text-align: center;
-  padding: 10px 0;
-  color : #333;
-}
-
 /****************************************************************************************/
-/* Conteneur pour le SVG */
+/* Container for the SVG */
 .arc-text {
   width: 100%;
   height: 300px;
@@ -64,7 +56,7 @@ footer {
 
 /*******************************************************************************************/
 
-/* Style pour le titre secondaire */
+/* Style for the subtitle */
 .subtitle {
   font-size: 36px;
   color: #faff60;

@@ -1,48 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
-<!DOCTYPE html>
-<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='auth.css') }}">
-    <link rel="shortcut icon"
-      href="{{ url_for('static', filename='images/background.png') }}" />
-    <!-- Icons  -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Animate.css for letter animation -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/background.png') }}" />
     <title>Connexion</title>
   </head>
 
 <body>
-<div class="container">
-    <h2>Connexion</h2>
-    <form  method="POST">
-        <div class="form-group">
-            <label>Identifiant Nom.Prenom</label>
-            <input type="text" name="first_name" required value="{{ request.form.first_name or '' }}">
-        </div>
+  <!-- Main login container -->
+  <div class="container">
+      <h2>Connexion</h2>
+      <form  method="POST">
+          <div class="form-group">
+              <label>Identifiant (nom.prenom)</label>
+              <!-- Username input field -->
+              <input type="text" name="first_name" required value="{{ request.form.first_name or '' }}">
+          </div>
 
-        <div class="form-group">
-            <label>Mot de passe</label>
-            <input type="password" name="password" required>
-            {% if errors.password %}
-                <div class="error">{{ errors.password }}</div>
-            {% endif %}
-        </div>
+          <div class="form-group">
+              <label>Mot de passe</label>
+              <!-- Password input field -->
+              <input type="password" name="password" required>
+              {% if errors.password %}
+                  <div class="error">{{ errors.password }}</div>
+              {% endif %}
+          </div>
+          <!-- Display general error message -->
+          {% if errors.general %}
+              <div class="error">{{ errors.general }}</div>
+          {% endif %}
 
-        {% if errors.general %}
-            <div class="error">{{ errors.general }}</div>
-        {% endif %}
+          <!-- Submit button -->
+          <input type="submit" value="Se connecter">
+      </form>
+      <!-- Signup link -->
+      <div style="text-align: center; margin-top: 15px;">
+        <a href="{{ url_for('signup') }}">Créer un compte</a>
 
-        <input type="submit" value="Se connecter">
-    </form>
-    <div style="text-align: center; margin-top: 15px;">
-      <a href="{{ url_for('signup') }}">Créer un compte</a>
-
+    </div>
   </div>
-</div>
 </body>
 </html>
