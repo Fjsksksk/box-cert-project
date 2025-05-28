@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
-<!DOCTYPE html>
-<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/background.png') }}" />
-    <!-- Icons  -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Animate.css for letter animation -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <title>Connexion</title>
+    <title>Inscription</title>
   </head>
-  
+
 <body>
 <div class="container">
+    <!-- Signup form container -->
     <h2>Créer un compte</h2>
     <form action="{{ url_for('signup') }}" method="POST">
         <div class="form-group">
+            <!-- First name input -->
             <label>Prénom</label>
             <input type="text" name="first_name" required value="{{ request.form.first_name or '' }}">
         </div>
 
         <div class="form-group">
+            <!-- Family name input -->
             <label>Nom de famille</label>
             <input type="text" name="family_name" required value="{{ request.form.family_name or '' }}">
         </div>
 
         <div class="form-group">
+            <!-- Password input -->
             <label>Mot de passe</label>
             <input type="password" name="password" required>
             {% if errors.password %}
@@ -37,6 +35,7 @@
         </div>
 
         <div class="form-group">
+            <!-- Confirm password input -->
             <label>Confirmer le mot de passe</label>
             <input type="password" name="confirm_password" required>
             {% if errors.confirm_password %}
@@ -45,6 +44,7 @@
         </div>
 
         <div class="form-group">
+            <!-- Optional admin code -->
             <label>Code admin (optionnel)</label>
             <input type="text" name="admin_code" value="{{ request.form.admin_code or '' }}">
             {% if errors.admin_code %}
