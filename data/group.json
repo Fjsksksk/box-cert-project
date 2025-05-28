@@ -3,19 +3,17 @@
     "groupe": [
       "Michel Mathis",
       "Fernandez Sarah",
-      "Garcia Enzo",
-      "Martinez Hugo",
-      "Chevalier Clara"
+      "Colin Noah",
+      "Marchand Julia"
     ],
-    "score": 375
+    "score": 305
   },
   {
     "groupe": [
       "Leroy Emma",
       "Moreau Lucas",
       "Petit Chloé",
-      "Faure Léa",
-      "martin max"
+      "Faure Léa"
     ],
     "score": 320
   },
@@ -24,29 +22,35 @@
       "Roux Nathan",
       "Garnier Louis",
       "Blanc Manon",
-      "Henry Jules",
       "Lemoine Camille"
     ],
-    "score": 375
+    "score": 225
   },
   {
     "groupe": [
+      "Garcia Enzo",
       "Perrin Louise",
+      "Martinez Hugo",
+      "Chevalier Clara"
+    ],
+    "score": 305
+  },
+  {
+    "groupe": [
       "Dupuis Ethan",
       "Robin Inès",
-      "Colin Noah",
-      "Marchand Julia"
+      "martin max",
+      "weinberg ben"
     ],
     "score": 285
   },
   {
     "groupe": [
       "Haifa Joe",
-      "weinberg ben",
       "messi leo",
       "giami candice",
       "Gauthier Maxime"
     ],
-    "score": 470
+    "score": 260
   }
 ]
