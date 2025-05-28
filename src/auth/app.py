@@ -8,16 +8,18 @@ import os
 import sys
 from flask import session
 
-# ajouter le dossier src au sys.path
+
+# Include the parent folder to access the 'algo' module
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from algo import load_students_from_file, group_students, save_groups
 
+# Initialize Flask app with custom folders for templates and static files
 app = Flask(__name__,
     template_folder=os.path.join(os.path.dirname(__file__), '..', 'templates'),
     static_folder=os.path.join(os.path.dirname(__file__), '..', 'static')
 )
 
-# Fonction pour connecter à la base de données
+# Establish connection to MySQL database
 def get_db_connection():
     return mysql.connector.connect(
         host='localhost',
@@ -25,7 +27,10 @@ def get_db_connection():
         password='W@2915djkq#',
         database='vote_user'
     )
-# Route pour la connexion
+
+
+
+# Sign-in route (login form + logic)
 @app.route('/auth/signin', methods=['GET', 'POST'])
 def signin():
     errors = {}
@@ -34,13 +39,14 @@ def signin():
         identifier = request.form.get('first_name', '').strip()
         password = request.form.get('password', '').strip()
 
-        # Check if identifier is in the format lastname.firstname
+        # Validate identifier format (lastname.firstname)
         if '.' in identifier:
             last_name, first_name = identifier.split('.', 1)
         else:
             errors['general'] = "Invalid identifier format. Expected: lastname.firstname"
             return render_template('auth/signin.html', errors=errors, request=request)
-
+        
+        # Look up the user in the database
         try:
             conn = get_db_connection()
             cursor = conn.cursor(dictionary=True)
@@ -52,6 +58,7 @@ def signin():
             cursor.close()
             conn.close()
         
+            # If user is found and password matches
             if user and check_password_hash(user['password_user'], password):
                 session['user'] = {
                         "firstname": user["firstname"],
@@ -73,6 +80,9 @@ def signin():
     return render_template('auth/signin.html', errors=errors, request=request)
 
 
+
+
+# Sign-up route (registration form + validation + insertion)
 @app.route('/auth/signup', methods=['GET', 'POST'])
 def signup():
     errors = {}
@@ -84,7 +94,7 @@ def signup():
         confirm_password = request.form.get('confirm_password', '').strip()
         admin_code = request.form.get('admin_code', '').strip()
 
-        # Validation du mot de passe
+        # Password validation rules
         if len(password) < 8:
             errors['password'] = "Password must contain at least 8 characters."
         elif len(re.findall(r"\d", password)) < 2:
@@ -95,16 +105,16 @@ def signup():
         if password != confirm_password:
             errors['confirm_password'] = "Passwords are not compatible."
 
-        # Détermination du rôle
-        role = 'student'  # valeur par défaut
+        # Assign user role based on admin code
+        role = 'student'
         if admin_code:
             if admin_code == '123':
                 role = 'teacher'
             else:
                 errors['admin_code'] = "Admin code invalide."
 
-        # Si tout est valide, insérer dans la base
-     # Si tout est valide, insérer dans la base
+
+        # Insert the user into the database if everything is valid      
         if not errors:
             try:
                 hashed_password = generate_password_hash(password)
@@ -127,31 +137,40 @@ def signup():
     return render_template('auth/signup.html', errors=errors, request=request)
 
 
-# Redirection vers la page de connexion par défaut
+
+
+# Homepage route
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Session secret key
+app.secret_key = "secret"
 
-app.secret_key = "secret"  # Requis pour flash()
-
+# File paths for preferences and group data
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data'))
 PREFERENCES_FILE = os.path.join(DATA_DIR, "preferences.json")
 GROUP_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/group.json"))
 CHOICES_FILE=os.path.abspath(os.path.join(os.path.dirname(__file__), "../../data/choice.json"))
+
+
 def load_preferences():
+    # Load current preference settings (number of preferences, vote state)
     if os.path.exists(PREFERENCES_FILE):
         with open(PREFERENCES_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
     return {"num_preferences": 3, "vote_open": False} 
 
 def save_num_preferences(num):
+    # Save number of preferences allowed
     prefs = load_preferences()
     prefs["num_preferences"] = num
     os.makedirs(os.path.dirname(PREFERENCES_FILE), exist_ok=True)
     with open(PREFERENCES_FILE, "w", encoding="utf-8") as f:
         json.dump(prefs, f, ensure_ascii=False, indent=2)
+
 def save_vote_open(state):
+    # Save vote open/close state
     prefs = load_preferences()
     prefs["vote_open"] = state
     os.makedirs(os.path.dirname(PREFERENCES_FILE), exist_ok=True)
@@ -159,42 +178,43 @@ def save_vote_open(state):
         json.dump(prefs, f, ensure_ascii=False, indent=2)
 
 
-
-
 def delete_student_from_choices(file_path, student_name):
+    # Delete a student and remove their name from others' preferences
     if not os.path.exists(file_path):
         return False
 
     with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    # Supprimer la personne concernée des préférences des autres
     for entry in data:
         entry["preferences"] = [pref for pref in entry["preferences"] if pref[0] != student_name]
 
-    # Supprimer la personne concernée des données
     data = [entry for entry in data if entry["name"] != student_name]
 
-    # Sauvegarde
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
     return True
 
+
+
 @app.route('/teacher', methods=["GET", "POST"])
 def teacher():
+    # Teacher dashboard: group generation, student management, vote control
     preferences = load_preferences()
     num_preferences = preferences["num_preferences"]
     groups = []
     show_confirm_buttons = False
 
     if request.method == "POST":
+        # Update number of preferences
         if 'num_preferences' in request.form:
             num_preferences = int(request.form["num_preferences"])
             save_num_preferences(num_preferences)
             flash("Nombre d'affinités enregistré.", "success")
             return redirect(url_for("teacher"))
 
+        # Generate groups (with or without confirmation)
         elif 'generate_groups' in request.form or 'confirm_generation' in request.form:
             try:
                 group_size = int(request.form["group_size"])
@@ -214,12 +234,16 @@ def teacher():
                         flash("Impossible de générer les groupes. Essayez un autre nombre.", "danger")
             except Exception as e:
                 flash(f"Erreur : {str(e)}", "danger")
+
+        # Open or close voting
         elif "vote_action" in request.form:
             action = request.form["vote_action"]
             preferences["vote_open"] = (action == "open")
             save_vote_open(action == "open")
             status = "ouvert" if action == "open" else "fermé"
             flash(f"Le vote a été {status}.", "info")
+
+        # Delete a student from preferences
         elif 'delete_student' in request.form:
             student_to_delete = request.form.get("student_to_delete")
             if student_to_delete:
@@ -229,6 +253,8 @@ def teacher():
                 else:
                     flash("Erreur lors de la suppression.", "danger")
             return redirect(url_for("teacher"))
+        
+        # Delete all groups
         elif 'delete_groups' in request.form:
             try:
                 with open(GROUP_FILE, "w", encoding="utf-8") as f:
@@ -239,7 +265,7 @@ def teacher():
             return redirect(url_for("teacher"))
 
 
-    # Charger les groupes existants (avec la nouvelle structure JSON)
+    # Load groups and student list
     if os.path.exists(GROUP_FILE):
         try:
             with open(GROUP_FILE, "r", encoding="utf-8") as f:
@@ -256,15 +282,19 @@ def teacher():
                 pass
 
     return render_template("teacher.html", num_preferences=num_preferences, groups=groups, show_confirm_buttons=show_confirm_buttons, all_students=all_students)
+
+
 @app.route('/student', methods=['GET', 'POST'])
 def student():
+    # Student dashboard: submit preferences
     preferences = load_preferences()
 
     if request.method == "POST":
         student_name = request.form.get("student_name").strip()
         selected_choices = request.form.getlist("choices")
         weights = request.form.getlist("weights")
-
+        
+        # Validate input
         try:
             weights = [int(w) for w in weights]
         except ValueError:
@@ -280,17 +310,17 @@ def student():
             return redirect(url_for("student"))
 
 
-        # Préparer les préférences pour l'enregistrement
+        # Format preferences for saving
         preferences_list = [[name, weight] for name, weight in zip(selected_choices, weights)]
 
-        # Charger les choix existants
+        # Load or initialize preferences file
         if os.path.exists(CHOICES_FILE):
             with open(CHOICES_FILE, "r", encoding="utf-8") as f:
                 data = json.load(f)
         else:
             data = []
 
-        # Mettre à jour ou ajouter les préférences
+        # Update or add new student preference entry
         updated = False
         for entry in data:
             if entry["name"] == student_name:
@@ -311,7 +341,7 @@ def student():
         flash("Vos préférences ont bien été enregistrées ou mises à jour.", "success")
         return redirect(url_for("student"))
 
-    # Charger les autres étudiants
+    # Load list of other students (excluding self)
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -327,7 +357,6 @@ def student():
         flash(f"Erreur de chargement des étudiants : {str(e)}", "danger")
         students = []
 
-    # Enlever soi-même de la liste
     user = session.get("user")
     full_name = f"{user['lastname']} {user['firstname']}"
     students = [s for s in students if s != full_name]
@@ -338,9 +367,9 @@ def student():
                            vote_open=preferences.get("vote_open", False))
 
 
-
 @app.route('/get_group', methods=['POST'])
 def get_group():
+    # Route to retrieve the group of a specific student
     student_name = request.form.get("student_name").strip()
     try:
         with open(GROUP_FILE, "r", encoding="utf-8") as f:
@@ -370,6 +399,7 @@ def get_group():
     return redirect(url_for("student"))
 
 if __name__ == '__main__':
+    # Start the app in debug mode
     app.run(debug=True)
 
  
