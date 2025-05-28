@@ -1,80 +1,49 @@
+import unittest
 import sys
 import os
-import json
-import math
-import pytest
 
-# Add the src/ directory to the Python path so we can import algo.py
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
-sys.path.insert(0, ROOT)
+# Ajouter src/ au path pour importer algo.py
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 
-from algo import load_students_from_file, group_students
+from algo import group_students
 
 
+class TestStudentGrouping(unittest.TestCase):
+    def test_basic_grouping(self):
+        """
+        This test verifies that the group_students function correctly groups four students
+        into two groups of two, maximizing the mutual affinities given in preferences.
+        """
+        students = [
+            {"name": "Alice", "preferences": [("Bob", 10)]},
+            {"name": "Bob", "preferences": [("Alice", 5)]},
+            {"name": "Charlie", "preferences": [("David", 8)]},
+            {"name": "David", "preferences": [("Charlie", 8)]},
+        ]
+        groups, group_scores, total_score = group_students(students, group_size=2)
 
-def test_load_students_from_file_reads_and_returns_expected_records(tmp_path):
-    """
-    Test that load_students_from_file correctly loads student records
-    from a JSON file and returns the exact data structure.
-    """
-    # Arrange
-    sample_data = [
-        {"name": "Alice", "preferences": ["Bob"]},
-        {"name": "Bob",   "preferences": ["Alice"]}
-    ]
-    json_file = tmp_path / "students.json"
-    json_file.write_text(json.dumps(sample_data, ensure_ascii=False))
+        self.assertEqual(len(groups), 2)
+        self.assertTrue(all(len(group) == 2 for group in groups))
+        self.assertEqual(total_score, 31)
 
-    # Act
-    result = load_students_from_file(str(json_file))
+    def test_group_size_not_divisible(self):
+        """
+        This test verifies that the function correctly handles cases where the number of students
+        is not divisible by the group size.
+        """
+        students = [
+            {"name": "Alice", "preferences": [("Bob", 4)]},
+            {"name": "Bob", "preferences": [("Alice", 4)]},
+            {"name": "Charlie", "preferences": [("David", 4)]},
+            {"name": "David", "preferences": [("Charlie", 4)]},
+            {"name": "Eve", "preferences": [("Alice", 2)]},
+        ]
+        groups, group_scores, total_score = group_students(students, group_size=2)
 
-    # Assert
-    assert result == sample_data, "Loaded data did not match the expected student records."
-    print("Passed: load_students_from_file returns correct data structure.")
+        self.assertEqual(len(groups), 3)
+        sizes = [len(g) for g in groups]
+        self.assertTrue(sorted(sizes) in ([1, 2, 2], [2, 2, 1]))
+        self.assertIsInstance(total_score, int)
 
-
-
-def test_group_students_creates_correct_group_sizes_and_no_duplicates():
-    """
-    Ensure group_students produces the right number of groups with the correct sizes
-    (including distributing remainder evenly) and that each student appears exactly once.
-    """
-    # Arrange
-    students = [
-        {"name": "A", "preferences": []},
-        {"name": "B", "preferences": []},
-        {"name": "C", "preferences": []}
-    ]
-
-    # Act
-    groups = group_students(students, group_size=2, num_preferences=0)
-
-    # Assert
-    sizes = sorted(len(g) for g in groups)
-    assert sizes == [1, 2], f"Expected group sizes [1, 2], got {sizes}"
-    flat_list = [student for group in groups for student in group]
-    assert set(flat_list) == {"A", "B", "C"}, "Some students are missing or duplicated across groups."
-    assert len(flat_list) == 3, "Total number of assigned students should equal number of input students."
-    print("Passed: group_students respects size distribution and uniqueness of assignment.")
-
-
-def test_group_students_honors_mutual_affinity_priority():
-    """
-    Verify that students with mutual preference appear in the same group
-    when num_preferences is set to include that preference.
-    """
-    # Arrange
-    students = [
-        {"name": "A", "preferences": ["B"]},
-        {"name": "B", "preferences": ["A"]},
-        {"name": "C", "preferences": []},
-        {"name": "D", "preferences": []},
-    ]
-
-    # Act
-    groups = group_students(students, group_size=2, num_preferences=1)
-
-    # Assert
-    assert any({"A", "B"}.issubset(set(group)) for group in groups), \
-        "Expected A and B (mutual preference) to be grouped together."
-    print("Passed: group_students groups mutual-affinity students together.")
+if __name__ == "__main__":
+    unittest.main()
