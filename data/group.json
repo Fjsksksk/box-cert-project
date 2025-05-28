@@ -1,93 +1,65 @@
 [
   {
     "groupe": [
-      "Léo",
-      "Paul"
+      "Paul",
+      "Lucie",
+      "Martin",
+      "Nina"
     ],
-    "score": 70
+    "score": 250
   },
   {
     "groupe": [
-      "Milo",
-      "Zoé"
-    ],
-    "score": 100
-  },
-  {
-    "groupe": [
-      "Antoine",
-      "Léa"
-    ],
-    "score": 100
-  },
-  {
-    "groupe": [
-      "Bob",
-      "Thomas"
-    ],
-    "score": 100
-  },
-  {
-    "groupe": [
-      "Élise",
-      "Noah"
-    ],
-    "score": 100
-  },
-  {
-    "groupe": [
-      "Manon",
-      "giami candice"
-    ],
-    "score": 0
-  },
-  {
-    "groupe": [
+      "Hugo",
       "Clara",
-      "Victor"
+      "Victor",
+      "weinberg ben"
     ],
-    "score": 50
-  },
-  {
-    "groupe": [
-      "Emma",
-      "Léna"
-    ],
-    "score": 60
+    "score": 200
   },
   {
     "groupe": [
       "Camille",
-      "Julien"
+      "Julien",
+      "Manon",
+      "Louis"
     ],
-    "score": 100
+    "score": 300
   },
   {
     "groupe": [
-      "Lucie",
-      "Martin"
+      "Sarah",
+      "Antoine",
+      "Léa",
+      "Milo"
     ],
-    "score": 100
+    "score": 300
   },
   {
     "groupe": [
-      "Nina",
-      "Hugo"
+      "Zoé",
+      "Lucas",
+      "Élise",
+      "Noah"
     ],
-    "score": 100
+    "score": 300
   },
   {
     "groupe": [
-      "Louis",
-      "Sarah"
+      "Thomas",
+      "Emma",
+      "Léo",
+      "Léna"
     ],
-    "score": 100
+    "score": 250
   },
   {
     "groupe": [
       "Jean Dupont",
+      "Alice",
+      "Bob",
       "Marie Curie"
     ],
-    "score": 40
+    "score": 400
   }
 ]
