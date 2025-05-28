@@ -1,26 +1,19 @@
 [
   [
+    "Martin Alice",
+    "Durand Sophie",
     "Lemoine Luc",
     "Garcia Emma",
-    "Simon Claire",
-    "Girard Paul",
-    "Henry Marie",
-    "Noël Lucas"
+    "Moreau Clara"
   ],
   [
-<<<<<<< HEAD
-    "Bernard Paul",
-    "Durand Sophie",
-    "Michel Julie",
-    "David Nicolas",
-    "Laurent Elise",
-    "Bertrand Yann"
+    "Rousseau Léa",
+    "Dubois Hugo",
+    "Fournier Camille",
+    "Marchand Maxime",
+    "weinberg ben"
   ],
   [
-=======
-    "Dupont Jean",
->>>>>>> efbefa18b00b4af309f9d30aa980307460b108b4
-    "Martin Alice",
     "Blanc Chloé",
     "Lefèvre Thomas",
     "Morel Sarah",
@@ -28,34 +21,16 @@
     "Fernandez Ana"
   ],
   [
-    "Moreau Clara",
-    "Rousseau Léa",
-    "Dubois Hugo",
-    "Fournier Camille",
-    "Marchand Maxime"
-<<<<<<< HEAD
-=======
-  ],
-  [
+    "Bernard Paul",
     "Michel Julie",
     "David Nicolas",
     "Laurent Elise",
     "Bertrand Yann"
   ],
   [
-    "Garcia Emma",
-    "Moreau Clara",
-    "Petit Lucas"
-  ],
-  [
-    "Lemoine Luc",
-    "Morel Sarah",
-    "Fernandez Ana"
-  ],
-  [
-    "Blanc Chloé",
-    "Lefèvre Thomas",
-    "Garnier Antoine"
->>>>>>> efbefa18b00b4af309f9d30aa980307460b108b4
+    "Simon Claire",
+    "Girard Paul",
+    "Henry Marie",
+    "Noël Lucas"
   ]
 ]

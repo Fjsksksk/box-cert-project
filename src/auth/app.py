@@ -143,12 +143,21 @@ def load_preferences():
     if os.path.exists(PREFERENCES_FILE):
         with open(PREFERENCES_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
-    return {"num_preferences": 3}
+    return {"num_preferences": 3, "vote_open": False} 
 
-def save_preferences(num):
+def save_num_preferences(num):
+    prefs = load_preferences()
+    prefs["num_preferences"] = num
     os.makedirs(os.path.dirname(PREFERENCES_FILE), exist_ok=True)
     with open(PREFERENCES_FILE, "w", encoding="utf-8") as f:
-        json.dump({"num_preferences": num}, f, ensure_ascii=False, indent=2)
+        json.dump(prefs, f, ensure_ascii=False, indent=2)
+def save_vote_open(state):
+    prefs = load_preferences()
+    prefs["vote_open"] = state
+    os.makedirs(os.path.dirname(PREFERENCES_FILE), exist_ok=True)
+    with open(PREFERENCES_FILE, "w", encoding="utf-8") as f:
+        json.dump(prefs, f, ensure_ascii=False, indent=2)
+
 
 
 def delete_student_from_choices(file_path, student_name):
@@ -173,6 +182,7 @@ def delete_student_from_choices(file_path, student_name):
 
 @app.route('/teacher', methods=["GET", "POST"])
 def teacher():
+    preferences = load_preferences()
     num_preferences = load_preferences()["num_preferences"]
     groups = []
     show_confirm_buttons = False
@@ -180,7 +190,7 @@ def teacher():
     if request.method == "POST":
         if 'num_preferences' in request.form:
             num_preferences = int(request.form["num_preferences"])
-            save_preferences(num_preferences)
+            save_num_preferences(num_preferences)
             flash("Nombre d'affinités enregistré.", "success")
             return redirect(url_for("teacher"))
 
@@ -204,6 +214,12 @@ def teacher():
                         flash("Impossible de générer les groupes. Essayez un autre nombre.", "danger")
             except Exception as e:
                 flash(f"Erreur : {str(e)}", "danger")
+        elif "vote_action" in request.form:
+            action = request.form["vote_action"]
+            preferences["vote_open"] = (action == "open")  
+            save_vote_open(action == "open")
+            status = "ouvert" if action == "open" else "fermé"
+            flash(f"Le vote a été {status}.", "info")
         elif 'delete_student' in request.form:
             student_to_delete = request.form.get("student_to_delete")
             if student_to_delete:
@@ -236,36 +252,52 @@ def teacher():
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     preferences = load_preferences()
-    num_preferences = preferences["num_preferences"]
+    num_preferences = preferences.get("num_preferences", 0)
 
     if request.method == "POST":
         student_name = request.form.get("student_name").strip()
         selected_choices = request.form.getlist("choices")
 
-        if len(selected_choices) > num_preferences:
-            flash(f"Vous ne pouvez sélectionner que {num_preferences} affinité(s).", "danger")
+        if len(set(selected_choices)) != num_preferences:
+            flash(f"Vous devez sélectionner exactement {num_preferences} personne(s) différentes.", "danger")
         else:
-            # Change choices to a set to avoid duplicates
+            # Charger les données existantes
             if os.path.exists(CHOICES_FILE):
                 with open(CHOICES_FILE, "r", encoding="utf-8") as f:
                     data = json.load(f)
             else:
-                data = {}
+                data = []
 
-            data[student_name] = selected_choices
+            # Chercher si l'étudiant a déjà voté
+            updated = False
+            for entry in data:
+                if entry["name"] == student_name:
+                    entry["preferences"] = selected_choices
+                    updated = True
+                    break
+
+            if not updated:
+                data.append({
+                    "name": student_name,
+                    "preferences": selected_choices
+                })
 
             os.makedirs(os.path.dirname(CHOICES_FILE), exist_ok=True)
             with open(CHOICES_FILE, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
 
-            flash("Vos choix ont bien été enregistrés.", "success")
+            flash("Vos préférences ont bien été enregistrées ou mises à jour.", "success")
             return redirect(url_for("student"))
 
-    # Change the list of students to be fetched from the database
+    # Chargement des autres étudiants
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT CONCAT(lastname, '.', firstname) AS full_name FROM users WHERE role = 'student'")
+        cursor.execute("""
+            SELECT CONCAT(lastname, ' ', firstname) AS full_name 
+            FROM users 
+            WHERE role = 'student'
+        """)
         students = [row[0] for row in cursor.fetchall()]
         cursor.close()
         conn.close()
@@ -273,8 +305,49 @@ def student():
         flash(f"Erreur de chargement des étudiants : {str(e)}", "danger")
         students = []
 
-    return render_template("student.html", num_preferences=num_preferences, other_students=students, user=session.get("user"))
+    # Enlever soi-même de la liste
+    user = session.get("user")
+    full_name = f"{user['lastname']} {user['firstname']}"
+    students = [s for s in students if s != full_name]
+  
+
+    return render_template("student.html", 
+                           num_preferences=num_preferences, 
+                           other_students=students, 
+                           user=user,
+                           vote_open=preferences.get("vote_open", False))
 
 
+
+@app.route('/get_group', methods=['POST'])
+def get_group():
+    student_name = request.form.get("student_name").strip()
+    try:
+        with open(GROUP_FILE, "r", encoding="utf-8") as f:
+            groups = json.load(f)
+
+        found_group = None
+        for group in groups:
+            if student_name in group:
+                found_group = group
+                break
+
+        if found_group:
+            # Exclure le nom de l'étudiant lui-même
+            others_in_group = [member for member in found_group if member.strip().lower() != student_name.strip().lower()]
+            
+            if others_in_group:
+                group_str = ", ".join(others_in_group)
+                flash(f"Vous êtes dans le groupe avec : {group_str}", "info")
+            else:
+                flash("Vous êtes seul dans ce groupe.", "info")
+        else :
+            flash("Vous êtes assigné a aucun groupe pour le moment", "info")
+                
+    except Exception as e:
+        flash(f"Erreur lors de la lecture des groupes : {str(e)}", "danger")
+
+    return redirect(url_for("student"))
 if __name__ == '__main__':
     app.run(debug=True)
+
