@@ -81,10 +81,10 @@ def signin():
 
 
 
-
 # Sign-up route (registration form + validation + insertion)
 @app.route('/auth/signup', methods=['GET', 'POST'])
 def signup():
+    
     errors = {}
 
     if request.method == 'POST':
@@ -113,26 +113,40 @@ def signup():
             else:
                 errors['admin_code'] = "Admin code invalide."
 
-
-        # Insert the user into the database if everything is valid      
+        # Check if user already exists before insertion
         if not errors:
             try:
-                hashed_password = generate_password_hash(password)
-
                 conn = get_db_connection()
-                cursor = conn.cursor()
-                query = """
-                    INSERT INTO users (firstname, lastname, password_user, role)
-                    VALUES (%s, %s, %s, %s)
+                cursor = conn.cursor(dictionary=True)
+
+                
+                query_check = """
+                    SELECT * FROM users WHERE firstname = %s AND lastname = %s
                 """
-                cursor.execute(query, (first_name, family_name, hashed_password, role))
-                conn.commit()
+                cursor.execute(query_check, (first_name, family_name))
+                existing_user = cursor.fetchone()
+
+                if existing_user:
+                    print('hello')
+                    flash("Un compte avec ce prénom et nom existe déjà.","error")
+                else:
+                  
+                    hashed_password = generate_password_hash(password)
+
+                    query_insert = """
+                        INSERT INTO users (firstname, lastname, password_user, role)
+                        VALUES (%s, %s, %s, %s)
+                    """
+                    cursor = conn.cursor()  # repasser en mode normal si nécessaire
+                    cursor.execute(query_insert, (first_name, family_name, hashed_password, role))
+                    conn.commit()
+                    return redirect(url_for('signin'))
+
                 cursor.close()
                 conn.close()
-                return redirect(url_for('signin'))
+
             except Exception as e:
                 errors['general'] = f"Erreur lors de l'inscription : {str(e)}"
-
 
     return render_template('auth/signup.html', errors=errors, request=request)
 
