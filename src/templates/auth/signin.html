@@ -5,10 +5,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='auth.css') }}">
-    <link rel="shortcut icon"
-      href="{{ url_for('static', filename='images/background.png') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/background.png') }}" />
     <!-- Icons  -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Animate.css for letter animation -->
@@ -21,7 +19,7 @@
     <h2>Connexion</h2>
     <form  method="POST">
         <div class="form-group">
-            <label>Identifiant Nom.Prenom</label>
+            <label>Identifiant (nom.prenom)</label>
             <input type="text" name="first_name" required value="{{ request.form.first_name or '' }}">
         </div>
 
