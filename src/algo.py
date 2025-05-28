@@ -125,7 +125,7 @@ if __name__ == "__main__":
         print(f"Fichier non trouvé : {file_path}")
         exit(1)
 
-    # Load student data and execute the grouping logic
+    # Load student data and exe cute the grouping logic
     students = load_students_from_file(file_path)
     print(f"{len(students)} étudiants chargés.")
 
