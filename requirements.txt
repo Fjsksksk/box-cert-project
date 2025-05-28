@@ -1,4 +1,14 @@
-Flask>=3.0,<4
-Flask-WTF>=1
-WTForms>=3
-Flask-Login>=0.6
+# Core Web Framework
+Flask==2.3.3
+
+# Database
+mysql-connector-python==8.2.0
+
+# Password hashing
+Werkzeug==2.3.7
+
+# Optimization solver for student group generation
+ortools==9.6.2534
+
+# Optional (if you're using Jinja custom filters or formatting tools)
+Jinja2==3.1.2
