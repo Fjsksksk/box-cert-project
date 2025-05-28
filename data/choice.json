@@ -1,285 +1,165 @@
 [
   {
-    "name": "Jean Dupont",
+    "name": "Haifa Joe",
     "preferences": [
-      [
-        "Bob",
-        50
-      ]
+      ["weinberg ben", 60],
+      ["messi leo", 40]
     ]
   },
   {
-    "name": "Bob",
+    "name": "weinberg ben",
     "preferences": [
-      [
-        "Jean Dupont",
-        70
-      ]
+      ["Haifa Joe", 70],
+      ["messi leo", 30]
     ]
   },
   {
-    "name": "Marie Curie",
+    "name": "messi leo",
     "preferences": [
-      [
-        "Jean Dupont",
-        40
-      ]
-    ]
-  },
-  {
-    "name": "Thomas",
-    "preferences": [
-      [
-        "Bob",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Emma",
-    "preferences": [
-      [
-        "Marie Curie",
-        50
-      ],
-      [
-        "Thomas",
-        50
-      ]
-    ]
-  },
-  {
-    "name": "Léo",
-    "preferences": [
-      [
-        "Emma",
-        70
-      ],
-      [
-        "Thomas",
-        30
-      ]
-    ]
-  },
-  {
-    "name": "Léna",
-    "preferences": [
-      [
-        "Léo",
-        40
-      ],
-      [
-        "Emma",
-        60
-      ]
-    ]
-  },
-  {
-    "name": "Paul",
-    "preferences": [
-      [
-        "Marie Curie",
-        30
-      ],
-      [
-        "Léo",
-        70
-      ]
-    ]
-  },
-  {
-    "name": "Lucie",
-    "preferences": [
-      [
-        "Paul",
-        50
-      ],
-      [
-        "Léna",
-        50
-      ]
-    ]
-  },
-  {
-    "name": "Martin",
-    "preferences": [
-      [
-        "Lucie",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Nina",
-    "preferences": [
-      [
-        "Martin",
-        60
-      ],
-      [
-        "Lucie",
-        40
-      ]
-    ]
-  },
-  {
-    "name": "Hugo",
-    "preferences": [
-      [
-        "Nina",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Clara",
-    "preferences": [
-      [
-        "Hugo",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Victor",
-    "preferences": [
-      [
-        "Clara",
-        50
-      ],
-      [
-        "Hugo",
-        50
-      ]
-    ]
-  },
-  {
-    "name": "Camille",
-    "preferences": [
-      [
-        "Victor",
-        70
-      ],
-      [
-        "Clara",
-        30
-      ]
-    ]
-  },
-  {
-    "name": "Julien",
-    "preferences": [
-      [
-        "Camille",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Manon",
-    "preferences": [
-      [
-        "Julien",
-        50
-      ],
-      [
-        "Camille",
-        50
-      ]
-    ]
-  },
-  {
-    "name": "Louis",
-    "preferences": [
-      [
-        "Manon",
-        60
-      ],
-      [
-        "Julien",
-        40
-      ]
-    ]
-  },
-  {
-    "name": "Sarah",
-    "preferences": [
-      [
-        "Louis",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Antoine",
-    "preferences": [
-      [
-        "Sarah",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Léa",
-    "preferences": [
-      [
-        "Antoine",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Milo",
-    "preferences": [
-      [
-        "Léa",
-        70
-      ],
-      [
-        "Antoine",
-        30
-      ]
-    ]
-  },
-  {
-    "name": "Zoé",
-    "preferences": [
-      [
-        "Milo",
-        100
-      ]
-    ]
-  },
-  {
-    "name": "Élise",
-    "preferences": [
-      [
-        "Lucas",
-        50
-      ],
-      [
-        "Zoé",
-        50
-      ]
-    ]
-  },
-  {
-    "name": "Noah",
-    "preferences": [
-      [
-        "Élise",
-        100
-      ]
+      ["weinberg ben", 50],
+      ["giami candice", 45]
     ]
   },
   {
     "name": "giami candice",
     "preferences": [
-      [
-        "Petit Chloé",
-        100
-      ]
-      
+      ["messi leo", 80]
+    ]
+  },
+  {
+    "name": "Leroy Emma",
+    "preferences": [
+      ["Moreau Lucas", 40],
+      ["Petit Chloé", 30],
+      ["Faure Léa", 20]
+    ]
+  },
+  {
+    "name": "Moreau Lucas",
+    "preferences": [
+      ["Leroy Emma", 50],
+      ["Petit Chloé", 30]
+    ]
+  },
+  {
+    "name": "Petit Chloé",
+    "preferences": [
+      ["Moreau Lucas", 35],
+      ["Faure Léa", 40]
+    ]
+  },
+  {
+    "name": "Faure Léa",
+    "preferences": [
+      ["Petit Chloé", 50],
+      ["Leroy Emma", 25]
+    ]
+  },
+  {
+    "name": "Roux Nathan",
+    "preferences": [
+      ["Garnier Louis", 45],
+      ["Blanc Manon", 40]
+    ]
+  },
+  {
+    "name": "Garnier Louis",
+    "preferences": [
+      ["Roux Nathan", 60],
+      ["Blanc Manon", 30]
+    ]
+  },
+  {
+    "name": "Blanc Manon",
+    "preferences": [
+      ["Roux Nathan", 50]
+    ]
+  },
+  {
+    "name": "Henry Jules",
+    "preferences": [
+      ["Lemoine Camille", 80]
+    ]
+  },
+  {
+    "name": "Lemoine Camille",
+    "preferences": [
+      ["Henry Jules", 70],
+      ["Michel Mathis", 20]
+    ]
+  },
+  {
+    "name": "Michel Mathis",
+    "preferences": [
+      ["Fernandez Sarah", 90]
+    ]
+  },
+  {
+    "name": "Fernandez Sarah",
+    "preferences": [
+      ["Michel Mathis", 90]
+    ]
+  },
+  {
+    "name": "Garcia Enzo",
+    "preferences": [
+      ["Perrin Louise", 60],
+      ["Martinez Hugo", 35]
+    ]
+  },
+  {
+    "name": "Perrin Louise",
+    "preferences": [
+      ["Garcia Enzo", 50]
+    ]
+  },
+  {
+    "name": "Martinez Hugo",
+    "preferences": [
+      ["Chevalier Clara", 80]
+    ]
+  },
+  {
+    "name": "Chevalier Clara",
+    "preferences": [
+      ["Martinez Hugo", 80]
+    ]
+  },
+  {
+    "name": "Dupuis Ethan",
+    "preferences": [
+      ["Robin Inès", 40],
+      ["Colin Noah", 50]
+    ]
+  },
+  {
+    "name": "Robin Inès",
+    "preferences": [
+      ["Dupuis Ethan", 70]
+    ]
+  },
+  {
+    "name": "Colin Noah",
+    "preferences": [
+      ["Marchand Julia", 60]
+    ]
+  },
+  {
+    "name": "Marchand Julia",
+    "preferences": [
+      ["Colin Noah", 65]
+    ]
+  },
+  {
+    "name": "Gauthier Maxime",
+    "preferences": [
+      ["giami candice", 95]
+    ]
+  },
+  {
+    "name": "martin max",
+    "preferences": [
+      ["weinberg ben", 75]
     ]
   }
 ]

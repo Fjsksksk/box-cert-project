@@ -1,65 +1,52 @@
 [
   {
     "groupe": [
-      "Paul",
-      "Lucie",
-      "Martin",
-      "Nina"
+      "Michel Mathis",
+      "Fernandez Sarah",
+      "Garcia Enzo",
+      "Martinez Hugo",
+      "Chevalier Clara"
     ],
-    "score": 250
+    "score": 375
   },
   {
     "groupe": [
-      "Hugo",
-      "Clara",
-      "Victor",
-      "weinberg ben"
+      "Leroy Emma",
+      "Moreau Lucas",
+      "Petit Chloé",
+      "Faure Léa",
+      "martin max"
     ],
-    "score": 200
+    "score": 320
   },
   {
     "groupe": [
-      "Camille",
-      "Julien",
-      "Manon",
-      "Louis"
+      "Roux Nathan",
+      "Garnier Louis",
+      "Blanc Manon",
+      "Henry Jules",
+      "Lemoine Camille"
     ],
-    "score": 300
+    "score": 375
   },
   {
     "groupe": [
-      "Sarah",
-      "Antoine",
-      "Léa",
-      "Milo"
+      "Perrin Louise",
+      "Dupuis Ethan",
+      "Robin Inès",
+      "Colin Noah",
+      "Marchand Julia"
     ],
-    "score": 300
+    "score": 285
   },
   {
     "groupe": [
-      "Zoé",
-      "Lucas",
-      "Élise",
-      "Noah"
+      "Haifa Joe",
+      "weinberg ben",
+      "messi leo",
+      "giami candice",
+      "Gauthier Maxime"
     ],
-    "score": 300
-  },
-  {
-    "groupe": [
-      "Thomas",
-      "Emma",
-      "Léo",
-      "Léna"
-    ],
-    "score": 250
-  },
-  {
-    "groupe": [
-      "Jean Dupont",
-      "Alice",
-      "Bob",
-      "Marie Curie"
-    ],
-    "score": 400
+    "score": 470
   }
 ]

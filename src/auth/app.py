@@ -281,8 +281,41 @@ def teacher():
             except:
                 pass
 
-    return render_template("teacher.html", num_preferences=num_preferences, groups=groups, show_confirm_buttons=show_confirm_buttons, all_students=all_students)
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT CONCAT(lastname, ' ', firstname) AS full_name
+        FROM users
+        WHERE role = 'student'
+    """)
+    students_in_db = [row["full_name"].strip().lower() for row in cursor.fetchall()]
+    total_students = len(students_in_db)
+    voted_students = 0
 
+    if os.path.exists(CHOICES_FILE):
+        with open(CHOICES_FILE, "r", encoding="utf-8") as f:
+            try:
+                choices_data = json.load(f)
+                for entry in choices_data:
+                    name = entry.get("name", "").strip().lower()
+                    preferences = entry.get("preferences", [])
+                    if name in students_in_db and preferences:
+                        voted_students += 1
+            except json.JSONDecodeError:
+                pass
+
+    return render_template(
+        "teacher.html",
+        num_preferences=num_preferences,
+        groups=groups,
+        show_confirm_buttons=show_confirm_buttons,
+        all_students=all_students,
+        voted_students=voted_students,
+        total_students=total_students
+    )
+
+
+    
 
 @app.route('/student', methods=['GET', 'POST'])
 def student():
