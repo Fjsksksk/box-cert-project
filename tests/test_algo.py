@@ -45,5 +45,23 @@ class TestStudentGrouping(unittest.TestCase):
         self.assertTrue(sorted(sizes) in ([1, 2, 2], [2, 2, 1]))
         self.assertIsInstance(total_score, int)
 
+
+    def test_no_preferences(self):
+        """
+        This test verifies that the program works even if no student gives a preference.
+        The total score should then be 0.
+        """
+        students = [
+            {"name": "Alice", "preferences": []},
+            {"name": "Bob", "preferences": []},
+            {"name": "Charlie", "preferences": []},
+            {"name": "David", "preferences": []},
+        ]
+        groups, group_scores, total_score = group_students(students, group_size=2)
+
+        self.assertEqual(total_score, 0)
+        self.assertEqual(len(groups), 2)
+        self.assertTrue(all(len(group) == 2 for group in groups))
+        
 if __name__ == "__main__":
     unittest.main()
